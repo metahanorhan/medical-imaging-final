@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#ffe0ec">
+<title>Medical Imaging Çalışma Sitesi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+<!-- KaTeX: gerçek matematik dizgisi (GitHub Pages'te / internet varken çalışır) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+/* ============================================================
+   Hello Kitty / Pembe tema  -  Medical Imaging Çalışma Sitesi
+   ============================================================ */
+:root{
+  --pink-1:#fff0f6;       /* en açık arka plan */
+  --pink-2:#ffe0ec;
+  --pink-3:#ffc2da;
+  --pink-4:#ff8fb1;       /* ana pembe */
+  --pink-5:#ff5e93;       /* vurgu */
+  --pink-6:#e34a7d;       /* koyu vurgu */
+  --purple:#c084fc;
+  --cream:#fffdf9;
+  --ink:#5b2a40;          /* yazı rengi (koyu bordo-mor) */
+  --ink-soft:#8a5a72;
+  --good:#34c759;
+  --bad:#ff3b5c;
+  --card-shadow:0 8px 24px rgba(255,94,147,.18);
+  --radius:22px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth; -webkit-text-size-adjust:100%;}
+button{-webkit-tap-highlight-color:transparent; touch-action:manipulation;}
+body{
+  margin:0;
+  font-family:"Quicksand","Baloo 2","Segoe UI",system-ui,sans-serif;
+  color:var(--ink);
+  -webkit-tap-highlight-color:transparent;
+  background:
+    radial-gradient(circle at 12% 8%, #ffe3ef 0, transparent 38%),
+    radial-gradient(circle at 88% 4%, #ffd6e8 0, transparent 32%),
+    linear-gradient(160deg,#fff5f9 0%, #ffe9f3 60%, #ffe0ee 100%);
+  background-attachment:fixed;
+  min-height:100vh;
+  line-height:1.65;
+}
+
+/* sevimli arka plan desenleri */
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background-image:
+    radial-gradient(circle, rgba(255,143,177,.10) 2px, transparent 3px),
+    radial-gradient(circle, rgba(192,132,252,.08) 2px, transparent 3px);
+  background-size:46px 46px, 70px 70px;
+  background-position:0 0, 22px 22px;
+}
+
+/* ---------- HEADER ---------- */
+header.site{
+  text-align:center;
+  padding:30px 16px 14px;
+}
+.kitty{
+  font-size:2.6rem;
+  filter:drop-shadow(0 4px 6px rgba(255,94,147,.4));
+}
+header.site h1{
+  margin:.2em 0 .1em;
+  font-size:clamp(1.6rem,4vw,2.5rem);
+  font-weight:700;
+  color:var(--pink-6);
+  letter-spacing:.5px;
+}
+header.site h1 .bow{font-size:1.3em; vertical-align:-4px;}
+header.site p.sub{
+  margin:0; color:var(--ink-soft); font-weight:600;
+  font-size:1rem;
+}
+header.site .course{
+  display:inline-block; margin-top:8px;
+  background:var(--pink-4); color:#fff; font-weight:700;
+  padding:4px 16px; border-radius:999px; font-size:.85rem;
+  box-shadow:var(--card-shadow);
+}
+
+/* ---------- NAV ---------- */
+nav.tabs{
+  position:sticky; top:0; z-index:50;
+  display:flex; flex-wrap:nowrap; gap:8px; justify-content:flex-start;
+  padding:12px 10px;
+  padding-top:max(12px, env(safe-area-inset-top));
+  background:rgba(255,240,246,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:2px dashed var(--pink-3);
+  overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+}
+nav.tabs::-webkit-scrollbar{display:none;}
+nav.tabs button{flex:0 0 auto;}
+@media (min-width:760px){ nav.tabs{flex-wrap:wrap; justify-content:center;} }
+
+/* ---------- ANA SAYFA BUTONU (yuvarlak FAB) ---------- */
+.home-fab{
+  position:fixed; z-index:120;
+  top:max(14px, env(safe-area-inset-top));
+  left:max(14px, env(safe-area-inset-left));
+  width:66px; height:66px; border-radius:50%;
+  border:3px solid #fff; cursor:pointer;
+  background:linear-gradient(135deg,var(--pink-4),var(--pink-5));
+  color:#fff; line-height:1;
+  box-shadow:0 6px 18px rgba(255,94,147,.45);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+  transition:transform .15s, box-shadow .2s;
+}
+.home-fab .hf-ico{font-size:1.45rem;}
+.home-fab .hf-label{font-size:.52rem; font-weight:800; letter-spacing:.2px; white-space:nowrap;}
+.home-fab:hover{transform:scale(1.08);}
+.home-fab:active{transform:scale(.92);}
+
+/* ---------- KOYU MOD BUTONU (sağ üst) ---------- */
+.theme-fab{
+  position:fixed; z-index:120;
+  top:max(14px, env(safe-area-inset-top));
+  right:max(14px, env(safe-area-inset-right));
+  width:50px; height:50px; border-radius:50%;
+  border:3px solid #fff; cursor:pointer;
+  background:linear-gradient(135deg,var(--pink-4),var(--pink-5));
+  font-size:1.4rem; line-height:1;
+  box-shadow:0 6px 18px rgba(255,94,147,.45);
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .15s, box-shadow .2s;
+}
+.theme-fab:hover{transform:scale(1.1) rotate(-10deg);}
+.theme-fab:active{transform:scale(.92);}
+
+nav.tabs button{
+  border:none; cursor:pointer;
+  font-family:inherit; font-weight:700; font-size:.92rem;
+  color:var(--pink-6);
+  background:#fff;
+  padding:10px 16px; border-radius:999px;
+  box-shadow:0 3px 10px rgba(255,94,147,.16);
+  transition:transform .15s, background .2s, color .2s;
+  display:flex; align-items:center; gap:6px;
+}
+nav.tabs button:hover{transform:translateY(-2px) scale(1.03);}
+nav.tabs button.active{
+  background:linear-gradient(135deg,var(--pink-4),var(--pink-5));
+  color:#fff;
+  box-shadow:0 6px 16px rgba(255,94,147,.4);
+}
+nav.tabs button .ico{font-size:1.05rem;}
+
+/* ---------- MAIN / VIEW ---------- */
+main{max-width:1080px; margin:0 auto; padding:22px 16px 80px;
+  padding-left:max(16px, env(safe-area-inset-left));
+  padding-right:max(16px, env(safe-area-inset-right));}
+.view{display:none; animation:fade .4s ease;}
+.view.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
+
+/* ---------- AÇILIŞ EKRANI (HOME) ---------- */
+.home{text-align:center;}
+.hero{padding:14px 10px 6px;}
+.hero h1{
+  margin:.2em 0 .1em; font-weight:700; color:var(--pink-6);
+  font-size:clamp(1.7rem,6vw,2.6rem); letter-spacing:.3px;
+}
+.hero .sub{margin:0; color:var(--ink-soft); font-weight:600; font-size:1rem;}
+.hero .course{
+  display:inline-block; margin-top:12px;
+  background:var(--pink-4); color:#fff; font-weight:700;
+  padding:5px 18px; border-radius:999px; font-size:.85rem;
+  box-shadow:var(--card-shadow);
+}
+.hero .pick{margin:24px 0 4px; font-weight:700; color:var(--pink-6); font-size:1.15rem;}
+.home-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:16px; max-width:780px; margin:18px auto 10px;
+}
+.home-card{
+  border:none; cursor:pointer; font-family:inherit;
+  background:linear-gradient(150deg,#fff,#fff2f8);
+  border:2px solid #ffe2ee; border-radius:var(--radius);
+  box-shadow:var(--card-shadow);
+  padding:22px 14px; min-height:140px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  border-bottom:5px solid var(--c, var(--pink-4));
+  transition:transform .15s, box-shadow .2s;
+}
+.home-card:hover{transform:translateY(-4px) scale(1.02); box-shadow:0 12px 28px rgba(255,94,147,.28);}
+.home-card:active{transform:scale(.98);}
+.home-card .hc-ico{font-size:2.1rem;}
+.home-card .hc-t{font-weight:700; color:var(--pink-6); font-size:1.08rem;}
+.home-card .hc-d{font-weight:600; color:var(--ink-soft); font-size:.78rem; line-height:1.4;}
+
+.section > h2.sec-title{
+  font-size:1.6rem; color:var(--pink-6);
+  text-align:center; margin:.2em 0 .1em;
+}
+.section > p.sec-desc{
+  text-align:center; color:var(--ink-soft); margin:.2em 0 1.4em;
+  font-weight:600;
+}
+
+/* ---------- KONULAR (Topics accordion) ---------- */
+.topic-chips{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:18px;}
+.topic-chip{
+  border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:.85rem;
+  padding:8px 14px; border-radius:999px; color:#fff;
+  box-shadow:var(--card-shadow); transition:transform .15s, filter .15s;
+}
+.topic-chip:hover{transform:translateY(-2px); filter:brightness(1.07);}
+
+.topic-card{
+  background:var(--cream);
+  border-radius:var(--radius);
+  box-shadow:var(--card-shadow);
+  margin-bottom:22px; overflow:hidden;
+  border:2px solid #ffe2ee;
+}
+.topic-head{
+  display:flex; align-items:center; gap:12px;
+  padding:18px 22px; color:#fff; cursor:pointer;
+  font-size:1.25rem; font-weight:700;
+}
+.topic-head .t-ico{font-size:1.6rem;}
+.topic-head .chev{margin-left:auto; transition:transform .3s; font-size:1.1rem;}
+.topic-card.open .chev{transform:rotate(180deg);}
+.topic-body{padding:0 22px; max-height:0; overflow:hidden; transition:max-height .5s ease, padding .3s;}
+.topic-card.open .topic-body{padding:18px 22px 24px; max-height:none;}
+.topic-intro{
+  background:var(--pink-1); border-left:5px solid var(--pink-4);
+  padding:12px 16px; border-radius:12px; margin-bottom:18px; font-weight:600;
+}
+.sub{
+  margin-bottom:16px; padding-bottom:14px;
+  border-bottom:1px dashed var(--pink-3);
+}
+.sub:last-child{border-bottom:none;}
+.sub h4{
+  margin:.2em 0 .4em; color:var(--pink-6); font-size:1.08rem;
+  display:flex; align-items:center; gap:8px;
+}
+.sub h4::before{content:"🎀"; font-size:.95em;}
+.sub .body{color:var(--ink);}
+.sub .example{
+  margin-top:10px; background:#fff6fb;
+  border:1.5px dashed var(--pink-3); border-radius:12px;
+  padding:10px 14px; font-size:.95rem;
+}
+.sub .example b.lbl{color:var(--pink-5);}
+code{
+  background:#ffe7f1; color:var(--pink-6);
+  padding:1px 7px; border-radius:7px; font-family:"Consolas",monospace;
+  font-size:.92em; font-weight:600;
+}
+
+/* ---------- SVG DİYAGRAMLAR ---------- */
+.diagram-cap{
+  text-align:center; font-size:.85rem; font-weight:700;
+  color:var(--pink-6); margin:14px 0 6px;
+}
+.diagram{
+  display:block; width:100%; max-width:460px; height:auto;
+  margin:0 auto 6px; background:#fffafc;
+  border:2px solid #ffe2ee; border-radius:14px; padding:8px;
+}
+.diagram-row{
+  display:flex; flex-wrap:wrap; gap:12px; justify-content:center; align-items:flex-start;
+}
+.diagram-row .diagram{margin:0;}
+
+/* ---------- BİLGİ KARTLARI (Flashcards) ---------- */
+.card-grid{
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:18px;
+}
+/* Çevirme yok: net kalan opaklık (fade) geçişi — yazı her ekranda net. */
+.flip{position:relative; height:210px; cursor:pointer;}
+.flip-inner{position:relative; width:100%; height:100%;}
+.flip-face{
+  position:absolute; inset:0;
+  border-radius:var(--radius); padding:18px;
+  display:flex; flex-direction:column; justify-content:center;
+  box-shadow:var(--card-shadow); overflow:auto;
+  transition:opacity .25s ease, transform .25s ease;
+}
+.flip-front{
+  background:linear-gradient(140deg,#fff,#fff2f8);
+  border:2px solid var(--pink-3); text-align:center;
+  opacity:1;
+}
+.flip.flipped .flip-front{opacity:0; transform:scale(.97); pointer-events:none;}
+.flip-front .q{font-weight:700; color:var(--ink); font-size:1.02rem;}
+.flip-front .hint{margin-top:12px; font-size:.78rem; color:var(--pink-5); font-weight:700;}
+.flip-back{
+  background:linear-gradient(140deg,var(--pink-4),var(--pink-5));
+  color:#fff; font-size:.95rem;
+  opacity:0; transform:scale(.97); pointer-events:none;
+}
+.flip.flipped .flip-back{opacity:1; transform:scale(1); pointer-events:auto;}
+.flip-back .a{font-weight:600;}
+.flip-back code{background:rgba(255,255,255,.25); color:#fff;}
+.badge{
+  align-self:flex-start; background:rgba(255,255,255,.6);
+  color:var(--pink-6); font-size:.7rem; font-weight:800;
+  padding:2px 10px; border-radius:999px; margin-bottom:8px;
+}
+.flip-back .badge{background:rgba(255,255,255,.28); color:#fff;}
+
+/* ---------- TERİMLER (Glossary) ---------- */
+.term-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px;}
+.term{
+  background:var(--cream); border-radius:16px; padding:14px 16px;
+  box-shadow:var(--card-shadow); border-left:5px solid var(--pink-4);
+}
+.term .en{font-weight:800; color:var(--pink-6); font-size:1.02rem;}
+.term .tr{color:var(--ink); font-size:.93rem; margin-top:2px;}
+.term .tt{font-size:.7rem; font-weight:800; color:#fff; background:var(--pink-4);
+  padding:1px 8px; border-radius:999px; float:right;}
+
+/* ---------- SEARCH ---------- */
+.searchbar{
+  display:flex; align-items:center; gap:10px; max-width:520px; margin:0 auto 20px;
+  background:#fff; border-radius:999px; padding:8px 16px;
+  box-shadow:var(--card-shadow); border:2px solid var(--pink-3);
+}
+.searchbar input{
+  border:none; outline:none; flex:1; font-family:inherit; font-size:1rem;
+  background:transparent; color:var(--ink);
+}
+.searchbar input::placeholder{color:#d99bbb;}
+
+/* ---------- TEST ---------- */
+.quiz-top{
+  position:sticky; top:calc(14px + env(safe-area-inset-top)); z-index:30;
+  display:flex; flex-wrap:wrap; align-items:center; gap:12px; justify-content:center;
+  background:rgba(255,255,255,.92); backdrop-filter:blur(8px);
+  border-radius:18px; padding:12px 64px 12px 84px; margin-bottom:20px;
+  box-shadow:var(--card-shadow);
+}
+.quiz-top .stat{font-weight:800; color:var(--pink-6);}
+.quiz-top .stat .num{font-size:1.2rem;}
+.scorebar{flex:1; min-width:160px; height:14px; background:#ffe0ec; border-radius:999px; overflow:hidden;}
+.scorebar > i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--pink-4),var(--pink-5)); transition:width .4s;}
+.filter-row{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:18px;}
+.btn{
+  border:none; cursor:pointer; font-family:inherit; font-weight:700;
+  padding:8px 16px; border-radius:999px; font-size:.85rem;
+  background:#fff; color:var(--pink-6); box-shadow:0 3px 10px rgba(255,94,147,.16);
+  transition:transform .15s, filter .15s;
+}
+.btn:hover{transform:translateY(-2px);}
+.btn.solid{background:linear-gradient(135deg,var(--pink-4),var(--pink-5)); color:#fff;}
+.btn.mini{padding:6px 12px; font-size:.78rem;}
+.fbtn.active{background:linear-gradient(135deg,var(--pink-4),var(--pink-5)); color:#fff;}
+
+.qcard{
+  background:var(--cream); border-radius:var(--radius); padding:18px 20px;
+  margin-bottom:16px; box-shadow:var(--card-shadow); border:2px solid #ffe2ee;
+}
+.qcard .qhead{display:flex; gap:10px; align-items:baseline; margin-bottom:12px;}
+.qcard .qnum{
+  flex:none; background:var(--pink-4); color:#fff; font-weight:800;
+  width:34px; height:34px; border-radius:50%; display:grid; place-items:center; font-size:.85rem;
+}
+.qcard .qtext{font-weight:700; color:var(--ink);}
+.qcard .qtopic{font-size:.68rem; font-weight:800; color:#fff; background:var(--purple); padding:2px 9px; border-radius:999px; margin-left:6px; white-space:nowrap;}
+.opts{display:grid; gap:9px;}
+.opt{
+  text-align:left; border:2px solid #ffd9e7; background:#fff;
+  border-radius:14px; padding:11px 14px; cursor:pointer;
+  font-family:inherit; font-size:.95rem; color:var(--ink);
+  transition:background .15s, border-color .15s, transform .1s;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.opt:hover{border-color:var(--pink-4); transform:translateX(2px);}
+.opt .key{font-weight:800; color:var(--pink-5); flex:none;}
+.opt.correct{background:#e7fbec; border-color:var(--good); color:#1c7d3a;}
+.opt.correct .key{color:var(--good);}
+.opt.wrong{background:#ffeaef; border-color:var(--bad); color:#b11233;}
+.opt.wrong .key{color:var(--bad);}
+.opt.disabled{cursor:default;}
+.explain{
+  margin-top:12px; background:#fff6fb; border:1.5px dashed var(--pink-3);
+  border-radius:12px; padding:10px 14px; font-size:.9rem; display:none;
+}
+.explain.show{display:block; animation:fade .3s;}
+.explain b.lbl{color:var(--pink-5);}
+
+/* ---------- FORMÜLLER / CRAM / TABLO ---------- */
+.cram-card{
+  background:linear-gradient(140deg,#fff,#fff2f8);
+  border-radius:var(--radius); padding:16px 20px; margin-bottom:16px;
+  box-shadow:var(--card-shadow); border-left:6px solid var(--pink-4);
+}
+.cram-card h4{margin:.1em 0 .4em; color:var(--pink-6);}
+.formula-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:14px; margin-bottom:26px;}
+.formula{
+  background:var(--cream); border-radius:16px; padding:14px 16px;
+  box-shadow:var(--card-shadow); border-top:5px solid var(--pink-4);
+}
+.formula .fname{font-weight:800; color:var(--pink-6); font-size:.98rem;}
+.formula .ftt{font-size:.66rem; font-weight:800; color:#fff; background:var(--purple); padding:1px 8px; border-radius:999px; float:right;}
+.formula .fexp{
+  display:flex; align-items:center; justify-content:center; flex-wrap:wrap;
+  margin:10px 0; padding:14px 12px; border-radius:12px;
+  background:#fff6fb; border:1.5px solid #ffd9e7;
+  color:#3a1a28; overflow-x:auto;
+  font-family:"Cambria Math","STIX Two Math","Latin Modern Math","Georgia","Times New Roman",serif;
+  font-size:1.32rem; line-height:1.5; font-weight:500;
+}
+.formula .fnote{font-size:.82rem; color:var(--ink-soft);}
+
+/* --- formül matematik öğeleri --- */
+.fexp i{font-style:italic; padding:0 .02em;}
+.fexp sub{font-size:.62em; vertical-align:-.35em; font-style:normal;}
+.fexp sup{font-size:.62em; vertical-align:.5em;}
+.fexp sub i, .fexp sup i{font-size:1em;}
+/* kesir */
+.fexp .fr{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; margin:0 .22em;}
+.fexp .fr > .nu{border-bottom:1.7px solid currentColor; padding:0 .45em .06em;}
+.fexp .fr > .de{padding:.06em .45em 0;}
+/* karekök */
+.fexp .sq{display:inline-flex; align-items:flex-start;}
+.fexp .sq::before{content:"√"; font-size:1.15em; line-height:1; margin-right:1px;}
+.fexp .sq > .rd{border-top:1.7px solid currentColor; padding:.06em .18em 0;}
+/* büyük parantez */
+.fexp .bp{font-size:1.7em; line-height:.7; vertical-align:-.28em; font-weight:400;}
+/* integral */
+.fexp .ig{font-size:1.7em; line-height:.7; vertical-align:-.28em; font-style:italic; margin:0 .04em;}
+/* formül olmayan açıklama metni */
+.fexp .mtxt{font-family:"Quicksand","Segoe UI",sans-serif; font-size:.98rem; font-weight:700; line-height:1.7; color:var(--pink-6);}
+
+/* KaTeX formül paneli ve metin içi formül */
+.fexp .katex-display{margin:.15em 0;}
+.fexp .katex{font-size:1.5rem;}
+.m{ display:inline-block; }
+.m .katex{ font-size:1.08em; }
+.body .m, .topic-intro .m{ vertical-align:-.12em; }
+
+.table-wrap{overflow-x:auto; border-radius:var(--radius); box-shadow:var(--card-shadow); margin-bottom:26px;}
+table.compare{border-collapse:collapse; width:100%; min-width:760px; background:var(--cream);}
+table.compare th, table.compare td{padding:12px 14px; text-align:left; border-bottom:1px solid #ffe2ee; font-size:.9rem;}
+table.compare thead th{
+  background:linear-gradient(135deg,var(--pink-4),var(--pink-5)); color:#fff;
+  position:sticky; top:0; font-size:.92rem;
+}
+table.compare tbody tr:nth-child(even){background:#fff6fb;}
+table.compare td:first-child, table.compare th:first-child{font-weight:800; color:var(--pink-6); background:#ffeaf3;}
+table.compare tbody tr:hover{background:#ffe7f1;}
+
+.h-title{
+  text-align:center; color:var(--pink-6); font-size:1.2rem; margin:8px 0 14px;
+  display:flex; align-items:center; gap:8px; justify-content:center;
+}
+
+/* ---------- FOOTER ---------- */
+footer{
+  text-align:center; padding:24px 16px 40px; color:var(--ink-soft); font-weight:600;
+  padding-bottom:max(40px, env(safe-area-inset-bottom));
+}
+footer .flowers{font-size:1.2rem;}
+
+/* ---------- küçük ekran ---------- */
+@media (max-width:540px){
+  nav.tabs button{padding:8px 12px; font-size:.82rem;}
+  .quiz-top{top:calc(14px + env(safe-area-inset-top)); padding-left:80px;}
+  .flip{height:230px;}
+  .home-grid{grid-template-columns:repeat(2,1fr); gap:12px;}
+  .home-card{min-height:120px; padding:18px 10px;}
+}
+/* yuvarlak ana sayfa butonu içerikle çakışmasın diye bölüm başlıklarına üst boşluk */
+@media (max-width:760px){
+  .view.section{padding-top:52px;}
+}
+
+/* gizleme yardımcı */
+.hidden{display:none !important;}
+.empty{text-align:center; color:var(--ink-soft); padding:30px; font-weight:700;}
+
+/* ============================================================
+   KOYU MOD (gece pembesi) — body.dark
+   ============================================================ */
+body.dark{
+  --pink-1:#3a2230;
+  --pink-2:#462a3a;
+  --pink-3:#5e3a4d;
+  --cream:#382230;
+  --ink:#ffe6f1;
+  --ink-soft:#d8aac2;
+  --pink-6:#ff9fce;
+  --card-shadow:0 8px 24px rgba(0,0,0,.5);
+  color:var(--ink);
+}
+body.dark{
+  background:
+    radial-gradient(circle at 12% 8%, #3a2030 0, transparent 40%),
+    radial-gradient(circle at 88% 4%, #341c2c 0, transparent 34%),
+    linear-gradient(160deg,#2a1622 0%, #321a28 60%, #281320 100%);
+}
+body.dark::before{
+  background-image:
+    radial-gradient(circle, rgba(255,143,177,.10) 2px, transparent 3px),
+    radial-gradient(circle, rgba(192,132,252,.08) 2px, transparent 3px);
+}
+/* yüzeyler */
+body.dark .home-card{background:linear-gradient(150deg,#3f2636,#34202e); border-color:#5e3a4d;}
+body.dark .flip-front{background:linear-gradient(140deg,#3f2636,#34202e); border-color:#5e3a4d;}
+body.dark .searchbar{background:#3f2636; border-color:#5e3a4d;}
+body.dark .searchbar input{color:var(--ink);}
+body.dark .searchbar input::placeholder{color:#a9789a;}
+body.dark .sub .example{background:#321d2a; border-color:#5e3a4d;}
+body.dark code{background:#4a2c3c; color:#ffc2dd;}
+body.dark .quiz-top{background:rgba(56,34,48,.92);}
+body.dark .opt{background:#3f2636; border-color:#5e3a4d; color:var(--ink);}
+body.dark .opt:hover{border-color:var(--pink-4);}
+body.dark .opt.correct{background:#1e3a28; border-color:#34c759; color:#bff5cf;}
+body.dark .opt.correct .key{color:#5fe089;}
+body.dark .opt.wrong{background:#43202c; border-color:#ff3b5c; color:#ffc2cf;}
+body.dark .opt.wrong .key{color:#ff7d96;}
+body.dark .explain{background:#321d2a; border-color:#5e3a4d;}
+body.dark .qcard, body.dark .topic-card{border-color:#5e3a4d;}
+body.dark .cram-card{background:linear-gradient(140deg,#3f2636,#34202e); border-left-color:var(--pink-4);}
+body.dark .topic-intro{background:#321d2a; border-left-color:var(--pink-4);}
+body.dark .btn{background:#462a3a; color:#ff9fce;}
+body.dark .scorebar{background:#5e3a4d;}
+body.dark .diagram{background:#f6eef2; border-color:#5e3a4d;}  /* diyagramlar okunur kalsın diye açık */
+/* formül paneli */
+body.dark .formula .fexp{background:#321d2a; border-color:#5e3a4d; color:#ffe6f1;}
+body.dark .formula .fexp .mtxt{color:#ff9fce;}
+/* tablo */
+body.dark table.compare{background:#382230;}
+body.dark table.compare th, body.dark table.compare td{border-bottom-color:#5e3a4d;}
+body.dark table.compare tbody tr:nth-child(even){background:#321d2a;}
+body.dark table.compare td:first-child, body.dark table.compare th:first-child{background:#46283a; color:#ff9fce;}
+body.dark table.compare tbody tr:hover{background:#43273a;}
+/* kart ön yüz yazı rengi */
+body.dark .flip-front .q{color:var(--ink);}
+
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+</head>
+<body>
+
+<button id="homebtn" class="home-fab hidden" data-go="home" aria-label="Ana Sayfaya dön" title="Ana Sayfa"><span class="hf-ico">🏠</span><span class="hf-label">Ana Sayfa</span></button>
+<button id="themebtn" class="theme-fab" aria-label="Koyu / açık mod" title="Koyu mod">🌙</button>
+
+<main>
+
+  <!-- AÇILIŞ EKRANI -->
+  <section class="view home active" id="home">
+    <div class="hero">
+      <h1>Medical Imaging Çalışma Sitesi</h1>
+      <p class="sub">CT · Nükleer Tıp · MRI · Ultrason · OCT</p>
+      <div><span class="course">BME302 — Medical Imaging</span></div>
+      <p class="pick">Ne çalışmak istersin? 🌸</p>
+      <div class="home-grid">
+        <button class="home-card" data-go="sec-topics" style="--c:#ff8fb1">
+          <span class="hc-ico">📖</span><span class="hc-t">Konular</span>
+          <span class="hc-d">Bol örnekle anlatım + diyagramlar</span>
+        </button>
+        <button class="home-card" data-go="sec-cards" style="--c:#ffa6c9">
+          <span class="hc-ico">🃏</span><span class="hc-t">Bilgi Kartları</span>
+          <span class="hc-d">Çevirmeli kartlarla hızlı tekrar</span>
+        </button>
+        <button class="home-card" data-go="sec-terms" style="--c:#d98fff">
+          <span class="hc-ico">🔤</span><span class="hc-t">İngilizce Terimler</span>
+          <span class="hc-d">Terim + Türkçe açıklama</span>
+        </button>
+        <button class="home-card" data-go="sec-quiz" style="--c:#ff5e93">
+          <span class="hc-ico">📝</span><span class="hc-t">Test (100 Soru)</span>
+          <span class="hc-d">Anında doğru/yanlış + açıklama</span>
+        </button>
+        <button class="home-card" data-go="sec-formulas" style="--c:#ff7eb6">
+          <span class="hc-ico">📐</span><span class="hc-t">Formüller & Özet</span>
+          <span class="hc-d">Sınav öncesi son tekrar</span>
+        </button>
+        <button class="home-card" data-go="sec-compare" style="--c:#c084fc">
+          <span class="hc-ico">📊</span><span class="hc-t">Karşılaştırma</span>
+          <span class="hc-d">5 yöntem yan yana tablo</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1) KONULAR -->
+  <section class="view section" id="sec-topics">
+    <h2 class="sec-title">📖 Konu Anlatımı</h2>
+    <p class="sec-desc">Tüm konular bol örnekle, basitleştirilerek anlatıldı. Başlığa dokunup aç/kapat yapabilirsin.</p>
+    <div class="topic-chips" id="topic-chips"></div>
+    <div id="topics-list"></div>
+  </section>
+
+  <!-- 2) BİLGİ KARTLARI -->
+  <section class="view section" id="sec-cards">
+    <h2 class="sec-title">🃏 Bilgi Kartları</h2>
+    <p class="sec-desc">Karta dokun → çevrilir ve cevabı gösterir. Konuya göre süzebilir veya arayabilirsin.</p>
+    <div class="searchbar">
+      <span>🔍</span>
+      <input id="flash-search" type="text" placeholder="Kartlarda ara (örn. Larmor, half-life, Doppler)...">
+    </div>
+    <div class="filter-row" id="flash-filter"></div>
+    <div class="card-grid" id="flash-grid"></div>
+  </section>
+
+  <!-- 3) TERİMLER -->
+  <section class="view section" id="sec-terms">
+    <h2 class="sec-title">🔤 Önemli İngilizce Terimler</h2>
+    <p class="sec-desc"><b id="term-count">0</b> terim — İngilizce terim + Türkçe açıklama. Sınavda karşına çıkacak kelimeler.</p>
+    <div class="searchbar">
+      <span>🔍</span>
+      <input id="term-search" type="text" placeholder="Terim ara (örn. attenuation, coherence, gradient)...">
+    </div>
+    <div class="term-grid" id="term-grid"></div>
+  </section>
+
+  <!-- 4) TEST -->
+  <section class="view section" id="sec-quiz">
+    <h2 class="sec-title">📝 Test — Sınavdan Önce Çöz!</h2>
+    <p class="sec-desc">100 soru (İngilizce). Bir şıkka dokun → doğru/yanlış anında gösterilir + açıklama açılır.</p>
+    <div class="quiz-top">
+      <div class="stat">✅ Doğru: <span class="num" id="score-correct">0</span></div>
+      <div class="stat">📋 <span class="num" id="score-done">0</span>/<span id="score-total">100</span></div>
+      <div class="stat">🎯 <span id="score-pct">0%</span></div>
+      <div class="scorebar"><i id="scorebar-fill"></i></div>
+      <button class="btn mini" id="quiz-reset">🔄 Sıfırla</button>
+    </div>
+    <div class="filter-row" id="quiz-filter"></div>
+    <div id="quiz-list"></div>
+  </section>
+
+  <!-- 5) FORMÜLLER & ÖZET -->
+  <section class="view section" id="sec-formulas">
+    <h2 class="sec-title">📐 Formüller &amp; Sınav Öncesi Özet</h2>
+    <p class="sec-desc">Son tekrar için: "mutlaka bil" notları + tüm formüller tek yerde.</p>
+    <div class="h-title">⭐ Sınav Öncesi "Mutlaka Bil" Notları</div>
+    <div id="cram-list"></div>
+    <div class="h-title">🧮 Formül Kartları</div>
+    <div class="formula-grid" id="formula-grid"></div>
+  </section>
+
+  <!-- 6) KARŞILAŞTIRMA -->
+  <section class="view section" id="sec-compare">
+    <h2 class="sec-title">📊 Modalite Karşılaştırma Tablosu</h2>
+    <p class="sec-desc">5 görüntüleme yöntemini yan yana karşılaştır — sınavda en çok işine yarayacak tablo!</p>
+    <div class="table-wrap" id="compare-wrap"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="flowers">🌸 💗 🌸</div>
+  <div>Hadi bakalım, sınavda başarılar! Sen yaparsın ✨</div>
+</footer>
+
+<script>
+/* ============================================================
+   BME302 - Medical Imaging  |  Ders İçeriği Verisi
+   Tüm içerik ders PDF/PPT'lerinden özetlenmiştir.
+   ============================================================ */
+
+/* ---------- SVG DİYAGRAMLAR ---------- */
+const SVG_ANGER = `
+<div class="diagram-cap">🔬 Anger Kamera — aşağıdan yukarıya foton akışı</div>
+<svg class="diagram" viewBox="0 0 420 340" role="img" aria-label="Anger kamera şeması">
+  <rect x="120" y="10" width="180" height="32" rx="8" fill="#ff5e93"/>
+  <text x="210" y="31" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Görüntü (X, Y, Z)</text>
+  <line x1="210" y1="42" x2="210" y2="58" stroke="#ff5e93" stroke-width="2"/>
+  <rect x="55" y="58" width="310" height="40" rx="8" fill="#fff" stroke="#ff5e93" stroke-width="2"/>
+  <text x="210" y="77" text-anchor="middle" fill="#e34a7d" font-size="12" font-weight="700">Positioning Logic</text>
+  <text x="210" y="91" text-anchor="middle" fill="#8a5a72" font-size="10">+ Pulse Height Analyzer (enerji eşikleri)</text>
+  <g fill="#ffd1dc" stroke="#ff5e93" stroke-width="2">
+    <circle cx="92" cy="128" r="16"/><circle cx="139" cy="128" r="16"/><circle cx="186" cy="128" r="16"/>
+    <circle cx="233" cy="128" r="16"/><circle cx="280" cy="128" r="16"/><circle cx="327" cy="128" r="16"/>
+  </g>
+  <text x="210" y="160" text-anchor="middle" fill="#8a5a72" font-size="11" font-weight="700">PMT dizisi — ışığı elektriğe çevirir + yükseltir</text>
+  <rect x="55" y="172" width="310" height="30" rx="4" fill="#ffe0ec" stroke="#ff5e93" stroke-width="2"/>
+  <text x="210" y="192" text-anchor="middle" fill="#e34a7d" font-size="12" font-weight="700">NaI(Tl) Sintilasyon Kristali (γ → ışık)</text>
+  <g stroke="#b06a86" stroke-width="6">
+    <line x1="70" y1="214" x2="70" y2="246"/><line x1="110" y1="214" x2="110" y2="246"/>
+    <line x1="150" y1="214" x2="150" y2="246"/><line x1="190" y1="214" x2="190" y2="246"/>
+    <line x1="230" y1="214" x2="230" y2="246"/><line x1="270" y1="214" x2="270" y2="246"/>
+    <line x1="310" y1="214" x2="310" y2="246"/><line x1="350" y1="214" x2="350" y2="246"/>
+  </g>
+  <text x="210" y="262" text-anchor="middle" fill="#8a5a72" font-size="11" font-weight="700">Kolimatör (kurşun) — sadece dik gelen fotonu geçirir</text>
+  <g stroke="#ff5e93" stroke-width="2" fill="none" marker-end="url(#ah)">
+    <line x1="150" y1="300" x2="150" y2="250"/>
+    <line x1="210" y1="305" x2="210" y2="250"/>
+    <line x1="270" y1="300" x2="270" y2="250"/>
+  </g>
+  <text x="210" y="326" text-anchor="middle" fill="#5b2a40" font-size="12" font-weight="700">★ Hasta + radyoaktif kaynak (γ ışınları)</text>
+  <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#ff5e93"/></marker></defs>
+</svg>`;
+
+const SVG_SPINECHO = `
+<div class="diagram-cap">🧲 Spin Echo — 90° → FID söner → 180° → eko (TE'de toplanır)</div>
+<svg class="diagram" viewBox="0 0 460 220" role="img" aria-label="Spin echo zaman diyagramı">
+  <line x1="30" y1="150" x2="445" y2="150" stroke="#c98aa6" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="442" y="168" text-anchor="end" fill="#8a5a72" font-size="11">zaman →</text>
+  <line x1="70" y1="150" x2="70" y2="55" stroke="#ff5e93" stroke-width="3"/>
+  <text x="70" y="46" text-anchor="middle" fill="#e34a7d" font-size="13" font-weight="700">90°</text>
+  <polyline points="70,150 78,98 86,150 94,116 102,150 110,128 118,150 126,138 134,150" fill="none" stroke="#c084fc" stroke-width="2"/>
+  <text x="120" y="92" fill="#9a52d8" font-size="11" font-weight="700">FID</text>
+  <line x1="240" y1="150" x2="240" y2="70" stroke="#ff8fb1" stroke-width="3"/>
+  <text x="240" y="61" text-anchor="middle" fill="#e34a7d" font-size="13" font-weight="700">180°</text>
+  <polyline points="350,150 358,140 366,150 374,124 382,150 390,110 398,150 406,124 414,150 422,140 430,150" fill="none" stroke="#ff5e93" stroke-width="2"/>
+  <text x="390" y="102" text-anchor="middle" fill="#e34a7d" font-size="11" font-weight="700">Eko</text>
+  <line x1="240" y1="60" x2="240" y2="188" stroke="#d99ab8" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="390" y1="100" x2="390" y2="188" stroke="#d99ab8" stroke-width="1" stroke-dasharray="4 3"/>
+  <text x="155" y="204" text-anchor="middle" fill="#8a5a72" font-size="11">← TE/2 →</text>
+  <text x="315" y="204" text-anchor="middle" fill="#8a5a72" font-size="11">← TE/2 →</text>
+  <text x="390" y="216" text-anchor="middle" fill="#8a5a72" font-size="11" font-weight="700">TE</text>
+  <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#c98aa6"/></marker></defs>
+</svg>`;
+
+const SVG_USMODES = `
+<div class="diagram-cap">🔊 A-mode (tek hat, 1B) ve B-mode (çok hat, 2B)</div>
+<div class="diagram-row">
+  <svg class="diagram" viewBox="0 0 300 230" role="img" aria-label="A-mode şeması" style="flex:1 1 270px">
+    <text x="150" y="16" text-anchor="middle" fill="#e34a7d" font-size="12" font-weight="700">A-mode</text>
+    <rect x="8" y="34" width="34" height="40" rx="5" fill="#ff8fb1"/>
+    <text x="25" y="58" text-anchor="middle" fill="#fff" font-size="9" font-weight="700">Prob</text>
+    <line x1="42" y1="54" x2="285" y2="54" stroke="#c98aa6" stroke-width="2" marker-end="url(#ar2)"/>
+    <g stroke="#9a52d8" stroke-width="3" stroke-dasharray="3 3">
+      <line x1="110" y1="34" x2="110" y2="74"/><line x1="180" y1="34" x2="180" y2="74"/><line x1="250" y1="34" x2="250" y2="74"/>
+    </g>
+    <line x1="42" y1="200" x2="285" y2="200" stroke="#c98aa6" stroke-width="2"/>
+    <line x1="42" y1="200" x2="42" y2="100" stroke="#c98aa6" stroke-width="2"/>
+    <g stroke="#ff5e93" stroke-width="3">
+      <line x1="48" y1="200" x2="48" y2="108"/><line x1="110" y1="200" x2="110" y2="128"/>
+      <line x1="180" y1="200" x2="180" y2="150"/><line x1="250" y1="200" x2="250" y2="168"/>
+    </g>
+    <text x="48" y="104" text-anchor="middle" fill="#e34a7d" font-size="9">T</text>
+    <text x="110" y="124" text-anchor="middle" fill="#e34a7d" font-size="9">E₁</text>
+    <text x="180" y="146" text-anchor="middle" fill="#e34a7d" font-size="9">E₂</text>
+    <text x="250" y="164" text-anchor="middle" fill="#e34a7d" font-size="9">E₃</text>
+    <text x="165" y="222" text-anchor="middle" fill="#8a5a72" font-size="10">derinlik = c·t/2 →</text>
+    <defs><marker id="ar2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#c98aa6"/></marker></defs>
+  </svg>
+  <svg class="diagram" viewBox="0 0 220 230" role="img" aria-label="B-mode şeması" style="flex:0 1 210px">
+    <text x="110" y="16" text-anchor="middle" fill="#e34a7d" font-size="12" font-weight="700">B-mode</text>
+    <rect x="86" y="26" width="48" height="16" rx="4" fill="#ff8fb1"/>
+    <text x="110" y="38" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">Prob</text>
+    <g stroke="#c98aa6" stroke-width="1">
+      <line x1="110" y1="42" x2="48" y2="120"/><line x1="110" y1="42" x2="80" y2="120"/>
+      <line x1="110" y1="42" x2="110" y2="120"/><line x1="110" y1="42" x2="140" y2="120"/><line x1="110" y1="42" x2="172" y2="120"/>
+    </g>
+    <rect x="40" y="120" width="148" height="84" rx="8" fill="#3a2a33"/>
+    <ellipse cx="96" cy="166" rx="36" ry="26" fill="#9a8a92"/>
+    <ellipse cx="96" cy="166" rx="18" ry="13" fill="#d9cdd3"/>
+    <ellipse cx="150" cy="150" rx="11" ry="15" fill="#7a6a72"/>
+    <text x="110" y="222" text-anchor="middle" fill="#8a5a72" font-size="9.5">çok A-line → 2B parlaklık görüntüsü</text>
+  </svg>
+</div>`;
+
+const SVG_MICHELSON = `
+<div class="diagram-cap">👁️ Michelson İnterferometresi — OCT'nin kalbi</div>
+<svg class="diagram" viewBox="0 0 360 270" role="img" aria-label="Michelson interferometresi şeması">
+  <rect x="10" y="115" width="62" height="30" rx="6" fill="#ff8fb1"/>
+  <text x="41" y="134" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">Işık kaynağı</text>
+  <line x1="72" y1="130" x2="200" y2="130" stroke="#ff5e93" stroke-width="2"/>
+  <line x1="160" y1="110" x2="200" y2="150" stroke="#9a52d8" stroke-width="4"/>
+  <text x="150" y="104" text-anchor="middle" fill="#9a52d8" font-size="9" font-weight="700">yarı-geçirgen ayna</text>
+  <line x1="180" y1="130" x2="180" y2="42" stroke="#ff5e93" stroke-width="2"/>
+  <rect x="150" y="26" width="60" height="16" rx="3" fill="#c084fc"/>
+  <text x="180" y="20" text-anchor="middle" fill="#9a52d8" font-size="9" font-weight="700">Referans ayna M₁</text>
+  <line x1="180" y1="130" x2="300" y2="130" stroke="#ff5e93" stroke-width="2"/>
+  <rect x="300" y="108" width="18" height="44" rx="3" fill="#ffb3cf"/>
+  <text x="296" y="166" text-anchor="middle" fill="#e34a7d" font-size="9" font-weight="700">Örnek M₂ (göz)</text>
+  <line x1="180" y1="150" x2="180" y2="224" stroke="#ff5e93" stroke-width="2"/>
+  <rect x="148" y="224" width="64" height="26" rx="6" fill="#ff5e93"/>
+  <text x="180" y="241" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">Dedektör (I=E²)</text>
+  <text x="112" y="86" fill="#8a5a72" font-size="9">referans kolu</text>
+  <text x="232" y="120" fill="#8a5a72" font-size="9">örnek kolu</text>
+</svg>`;
+
+/* ---------- 1) KONULAR (Topic explanations) ---------- */
+const TOPICS = [
+  /* ===================== CT ===================== */
+  {
+    id: "ct",
+    title: "Bilgisayarlı Tomografi (CT)",
+    icon: "🩻",
+    color: "#ff8fb1",
+    intro:
+      "CT, vücudun ince <b>dilim (slice)</b> görüntülerini X-ışını kullanarak oluşturan bir <b>iletim görüntüleme (transmission imaging)</b> yöntemidir. Üst üste binen yapıları ayırır ve <b>anatomik yapıyı</b> yüksek çözünürlükle gösterir.",
+    sections: [
+      {
+        heading: "CT Nedir? (Tomografi mantığı)",
+        body:
+          "<b>Tomografi (tomography)</b> = bir <i>dilim</i> görüntüsü demektir; düz röntgende üst üste binen yapıları kaldırır. <b>Computed</b> kelimesi ise görüntünün doğrudan değil, bir <b>bilgisayar + geri çatma algoritması (reconstruction algorithm)</b> ile hesaplanarak oluşturulduğunu anlatır.<br><br>Mantık şudur: X-ışını vücuttan geçerken her dokuda farklı oranda <b>zayıflar (attenuation, μ)</b>. Farklı açılardan alınan bu zayıflama ölçümlerinden, bilgisayar kesit görüntüsünü matematiksel olarak geri hesaplar.",
+        example:
+          "Düz röntgende kaburga ile akciğer üst üste biner; CT ise tek bir kesit alıp sadece o dilimdeki dokuları gösterir — adeta ekmeği dilimleyip tek dilime bakmak gibi."
+      },
+      {
+        heading: "Tarayıcı Nesilleri (Scanner Generations 1G–7G)",
+        body:
+          "<b>1. Nesil (1G):</b> Tek bir kaynak (single source) ince bir çizgiye odaklanır (pencil beam) + tek detektör (single detector). Sistem önce doğrusal kayar (translate), sonra döner (rotate). Çok yavaş.<br>" +
+          "<b>2. Nesil (2G):</b> Detektör <b>dizisi (detector array)</b> + <b>yelpaze huzme (fan beam)</b> kullanılır. Hâlâ hem kayar hem döner ama daha hızlı.<br>" +
+          "<b>3. Nesil (3G):</b> Detektör sayısı çok arttı (>800), fan beam tüm hastayı kaplar → <b>kayma hareketi kalktı</b>. Tüp ve detektör birlikte döner. Tarama ~½ saniye.<br>" +
+          "<b>4. Nesil (4G):</b> Tek dönen kaynak + <b>sabit detektör halkası (stationary ring)</b>. Detektörler collimated değildir.<br>" +
+          "<b>5. Nesil (5G) – Electron Beam CT (EBCT):</b> Klasik X-ışını tüpü yok; hastayı saran tungsten ark var, elektron demeti hedefe yönlendirilir. ~50 ms; <b>atan kalbi</b> film gibi görüntüler (kardiyak).<br>" +
+          "<b>6. Nesil (6G) – Helical/Spiral CT:</b> Masa <i>hareket ederken</i> veri toplanır → çok hızlı, az kontrast madde, çoğu zaman tek <b>nefes tutmada (breath-hold)</b> tamamlanır.<br>" +
+          "<b>7. Nesil (7G) – Multislice (çok kesitli):</b> Aynı anda birden fazla detektör sırası → tek dönüşte birçok kesit.",
+        example:
+          "1G'de tek detektör tek tek noktaları tarar (yavaş); 3G'de yelpaze tüm hastayı bir bakışta görür ve sadece döner (hızlı). Nesil arttıkça hız artar ve hareket azalır."
+      },
+      {
+        heading: "Görüntü Geri Çatma Problemi (Image Reconstruction)",
+        body:
+          "Her piksel bilinmeyen bir zayıflama katsayısıdır (μ). Bir ışın yolu üzerindeki μ'lerin toplamını ölçeriz. Bilinmeyenleri bulmak için yeterli sayıda <b>denklem (projeksiyon)</b> gerekir.<br><br>" +
+          "Örn. 2×2 görüntü = 4 bilinmeyen → 4 denklem yeterli. Ama 3×3 = 9 bilinmeyen için 6 denklem <b>yetmez</b> (tek çözüm yok), 9 denklem gerekir.<br><br>" +
+          "Gerçek görüntü 1000×1000 ise <b>1 milyon bilinmeyen</b> ve 1 milyon×1 milyon'luk dev bir matris çıkar — bu yüzden denklem çözmek pratik değildir; <b>geri projeksiyon</b> tabanlı yöntemler kullanılır.",
+        example:
+          "Sudoku gibi: yeterli ipucu (denklem) yoksa birden fazla çözüm olur. CT'de 'ipucu' = farklı açılardan alınan projeksiyonlar."
+      },
+      {
+        heading: "Geri Projeksiyon (Back Projection)",
+        body:
+          "<b>Projeksiyon</b> = bir açıdan bakıldığında ışın yolundaki değerlerin toplamı. <b>Geri projeksiyon (backprojection)</b> = bu toplamı, geldiği çizgi boyunca geri yaymak (smear back).<br><br>" +
+          "Birden çok açının geri projeksiyonu toplanınca görüntünün kabası ortaya çıkar; ama sonuç <b>bulanıktır (blurry)</b>. Bu yüzden filtreleme gerekir.",
+        example:
+          "Basit hesap mantığı: bir projeksiyonun değerlerini ekle, tüm hücrelerden çıkar, (projeksiyon sayısı−1)'e böl → orijinal değerlere yaklaşırsın."
+      },
+      {
+        heading: "Radon Dönüşümü ve Sinogram (Radon Transform & Sinogram)",
+        body:
+          "<b>Radon dönüşümü</b>, bir f(x,y) görüntüsünün belirli bir açıda alınan tüm çizgi integrallerini verir:<br>" +
+          "<span class='m' data-tex='ct_radon'></span><br>Burada θ projeksiyon açısı, l detektör üzerindeki konumdur.<br><br>" +
+          "<b>Sinogram</b>, tüm açılardaki projeksiyonların bir araya getirilmiş halidir (Radon dönüşümünün görüntüsü). Yatay eksen <b>konum (l)</b>, dikey eksen <b>açı (θ)</b>'dır. Tek bir nokta sinogramda sinüs eğrisi çizdiği için 'sinogram' denir.",
+        example:
+          "Shepp-Logan fantomu sinograma çevrilince, nesnenin tüm açılardaki gölgelerinin dalgalı bir deseni görülür."
+      },
+      {
+        heading: "Projeksiyon-Dilim Teoremi (Projection / Fourier-Slice Theorem)",
+        body:
+          "Temel teorem: Bir projeksiyonun <b>1B Fourier dönüşümü</b>, görüntünün <b>2B Fourier dönüşümünün</b> aynı açıdaki bir <b>dilimine (slice)</b> eşittir.<br><br>" +
+          "Yöntem: (1) Tüm açılarda projeksiyon al → (2) her birinin 1B FT'sini al, F(u,v)'yi dilim dilim doldur → (3) 2B ters FT (IFT) ile görüntüyü geri çat.<br><br>" +
+          "<b>Sorun:</b> Fourier örnekleri merkeze yakın (düşük frekans) yoğun, dışarıda (yüksek frekans) seyrektir. Düşük frekanslar iyi, yüksek frekanslar (ince detaylar) kötü örneklenir → <b>bulanık görüntü</b>.",
+        example:
+          "Düşük frekans = nesnenin genel şekli (iyi gelir); yüksek frekans = keskin kenarlar/detay (eksik kalır) → ham FST görüntüsü bulanıktır."
+      },
+      {
+        heading: "Filtrelenmiş Geri Projeksiyon (Filtered Backprojection, FBP)",
+        body:
+          "FBP, bulanıklık sorununu çözen <b>standart CT geri çatma algoritmasıdır</b>. Geri projeksiyondan önce projeksiyon bir filtreyle çarpılır.<br><br>" +
+          "<b>Algoritma:</b> Her θ için → (1) g(l,θ)'nın 1B FT'sini al: G(ρ,θ) → (2) frekans filtresi uygula: Q(ρ,θ) = |ρ|·G(ρ,θ) → (3) ters 1B FT: q(l,θ) → (4) geri projekte et. Sonunda tüm açıları topla.<br><br>" +
+          "<b>|ρ| = ramp filtresi (ramp filter):</b> bir <i>yüksek geçiren (high-pass)</i> filtredir; yüksek frekanslardaki seyrek örneklemeyi telafi eder. Gürültüyü bastırmak için genelde bir pencere ile sınırlandırılır (<b>Hamming windowing</b> → 'windowed ramp filter').",
+        example:
+          "Ramp filtresi olmadan görüntü bulanık çıkar; |ρ| filtresi kenarları geri keskinleştirir. Bu yüzden FBP ≈ 'filtrele + geri projekte et + topla'."
+      }
+    ]
+  },
+
+  /* ================ NUCLEAR MEDICINE ================ */
+  {
+    id: "nuclear",
+    title: "Nükleer Tıp Görüntüleme",
+    icon: "☢️",
+    color: "#ffa6c9",
+    intro:
+      "Nükleer tıp, vücuda <b>radyoaktif madde (radiotracer)</b> verip yaydığı gamma ışınlarını dışarıdan dedekte eder. Bu bir <b>emisyon görüntüleme (emission imaging)</b>'dir ve anatomiyi değil <b>fonksiyon/metabolizmayı (functional imaging)</b> gösterir.",
+    sections: [
+      {
+        heading: "Nükleer Tıp Nedir?",
+        body:
+          "Vücuda radyoaktif bir madde verilir; bu madde dağılır ve dokular tarafından tutulur/metabolize edilir. Radyoaktif atom <b>bozunurken (radioactive decay)</b> iyonlaştırıcı radyasyon yayar. Bu yayılan radyasyonun bölgesel farklılıkları, belirli bir <b>fizyolojik fonksiyonun</b> var/yok olduğunu gösterir.<br><br>" +
+          "<b>CT/Röntgen (transmission):</b> Işın <i>dışarıdan</i> verilir, vücuttan geçer → anatomi.<br>" +
+          "<b>Nükleer tıp (emission):</b> Gamma ışını <i>vücudun içinden</i> yayılır → fonksiyon (beyin/miyokard perfüzyonu, tümör/metastaz tespiti).",
+        example:
+          "PET ile bir tümör, henüz şekil bozukluğu yapmadan, sadece yüksek şeker (glukoz) metabolizması nedeniyle 'parlak' görünebilir — fonksiyonel görüntülemenin gücü budur."
+      },
+      {
+        heading: "Radyoaktif Bozunma ve Radyoaktivite (Decay & Radioactivity)",
+        body:
+          "<b>Bozunma (disintegration):</b> Atomun proton/nötronlarını yeniden düzenleyip daha düşük enerjili hâle (daughter atom) geçmesi; bu sırada enerji açığa çıkar.<br><br>" +
+          "<b>Radyoaktivite</b> = saniyede kaç atomun bozunduğu.<br>• Birim: <b>Curie (Ci)</b>, 1 Ci = 3.7×10¹⁰ bozunma/saniye (dps).<br>• SI birimi: <b>Becquerel (Bq)</b>, 1 Bq = 1 dps.<br><br>" +
+          "Bozunma yasası: <span class='m' data-tex='nm_decay'></span> (λ = bozunma sabiti). Dedektöre ulaşan şiddet: <span class='m' data-tex='nm_intensity'></span> (ters kare yasası).",
+        example:
+          "Curie çok büyük bir birimdir; bir hasta dozu genelde milicurie (mCi) veya megabecquerel (MBq) mertebesindedir."
+      },
+      {
+        heading: "Yarı Ömür (Half-Life)",
+        body:
+          "<b>Yarı ömür (T½)</b> = radyoaktivitenin yarıya inmesi için geçen süre. <span class='m' data-tex='nm_halflife'></span>.<br><br>" +
+          "Görüntülemede yarı ömür çok önemlidir: <b>çok kısa olursa</b> dedektör yakalayamadan biter, <b>çok uzun olursa</b> hasta gereksiz uzun süre ışınlanır. İdeal: <b>dakikalar–saatler.</b>",
+        example:
+          "Tc-99m'in yarı ömrü 6 saat: hem görüntü almaya yetecek kadar uzun, hem de hastayı uzun süre ışınlamayacak kadar kısa → en yaygın radyotracer."
+      },
+      {
+        heading: "Bozunma Modları (Decay Modes)",
+        body:
+          "Dört ana mod: <b>Alfa (α)</b> (2 proton+2 nötron), <b>Beta (β, elektron)</b>, <b>Pozitron (β⁺, anti-elektron)</b>, <b>İzomerik geçiş (gamma ışını)</b>.<br><br>" +
+          "Tıbbi görüntüleme yalnızca ikisini kullanır:<br>" +
+          "• <b>Gamma ışınları → Sintigrafi / SPECT</b><br>" +
+          "• <b>Pozitronlar → PET</b><br><br>" +
+          "<b>Gamma decay (isomeric transition):</b> Kararsız çekirdek yüksek enerjiden düşük enerjiye geçerken foton (gamma) yayar. Parent ve daughter aynı element + aynı izotoptur (izomer); örn. Tc-99m → Tc-99. Gamma ışını X-ışınıyla aynı özelliktedir ama <i>çekirdekten</i> doğar (X-ışını ise elektron etkileşiminden).<br><br>" +
+          "<b>Pozitron decay (β⁺):</b> Bir proton → nötron + pozitron + nötrino. Pozitron kısa mesafe sonra bir elektronla <b>yok olur (annihilation)</b> → zıt yönlerde iki adet <b>511 keV</b> gamma fotonu doğar (PET'in temeli).",
+        example:
+          "İzotop = aynı proton, farklı kütle (kimyasal olarak aynı). İzomer = aynı izotop ama farklı enerji seviyesi (Tc-99m'deki 'm' = metastable/uyarılmış)."
+      },
+      {
+        heading: "Radyotracer Özellikleri ve Yaygın İzleyiciler",
+        body:
+          "İyi bir radyotracer: <br>• <b>Temiz bozunma</b> (alfa/beta yaymayan saf gamma; ya da pozitron)<br>• <b>Foton enerjisi</b> 70–511 keV arası (vücuttan az zayıflayarak çıkacak kadar yüksek, ama dedekte edilemeyecek kadar yüksek değil)<br>• <b>Yarı ömür</b> dakika–saat<br>• <b>Monoenerjik</b> (tek enerjili) → dedektör saçılan fotonları ayırt edebilir.<br><br>" +
+          "<b>Gamma yayıcılar:</b> Tc-99m (6 sa, 140 keV), Tl-201 (73 sa, 135 keV), I-123 (13.3 sa, 159 keV).<br>" +
+          "<b>Pozitron yayıcılar:</b> F-18 (110 dk, 202 keV), O-15 (2.1 dk, 696 keV).<br><br>" +
+          "Klinikte kullanılan izotoplar genelde doğal değil, stabil izotopların yüksek enerjili parçacıklarla bombardımanıyla <b>yapay</b> üretilir.",
+        example:
+          "F-18, FDG (florodeoksiglukoz) ile birleştirilip PET'te kanser metabolizmasını görüntülemekte kullanılır."
+      },
+      {
+        heading: "Görüntüleme Modaliteleri (Planar, SPECT, PET)",
+        body:
+          "<b>Planar Sintigrafi:</b> Gamma yayan tracer, rastgele yönlerde tek tek foton üretir. Kamera fotonları <i>tek yönden</i> yakalar (X-ışınına benzer ama kaynak hastanın içindedir). <b>Anger sintilasyon kamerası</b> kullanır.<br><br>" +
+          "<b>SPECT (Single Photon Emission Computed Tomography):</b> Gamma yayan tracer. Fotonlar <i>birçok yönden</i> yakalanır (CT gibi). <b>Dönen Anger kamerası</b> ile farklı açılardan projeksiyon alır; tarama <30 dk'ya inmiştir (çok başlı kameralar).<br><br>" +
+          "<b>PET (Positron Emission Tomography):</b> Pozitron yayan tracer. Annihilation iki zıt yönlü foton üretir. <b>Koincidans (eş zamanlılık) deteksiyonu</b> ile zıt yöndeki iki foton aynı anda yakalanır.",
+        example:
+          "Planar ≈ tek açılı röntgen; SPECT ≈ gamma ışınlı CT; PET ≈ zıt çiftler sayan özel CT."
+      },
+      {
+        heading: "Anger Kamera ve Bileşenleri",
+        svg: SVG_ANGER,
+        body:
+          "<b>Anger sintilasyon kamerası</b> aşamaları:<br>" +
+          "1) <b>Kolimatör (collimator):</b> kurşundan; sadece doğru yönde gelen fotonları geçirir, saçılanları emer (paralel delikler).<br>" +
+          "2) <b>Sintilasyon kristali (scintillation crystal):</b> Genelde <b>NaI(Tl)</b> (talyum katkılı sodyum iyodür). Gamma fotonu kristalde foto-elektrik/Compton ile etkileşip binlerce <b>ışık fotonu (scintillation)</b> üretir. Kalın kristal → yüksek enerji, ince kristal → düşük enerji.<br>" +
+          "3) <b>Fotoçoğaltıcı tüpler (PMT):</b> Işığı elektrik sinyaline çevirir ve <i>yükseltir</i>. Fotokatot + dinotlar.<br>" +
+          "4) <b>Konumlandırma mantığı (positioning logic):</b> Olayın yerini (X,Y) ve toplam ışığı (Z-pulse, enerji ile orantılı) hesaplar.<br>" +
+          "5) <b>Pulse Height Analyzer (PHA) / Gating:</b> Alt eşik → Compton saçılmış (düşük enerji) olayları eler; üst eşik → çoklu (toplanmış) olayları eler. Sadece tam enerjili (saçılmamış) fotonlar görüntüye katkı yapar.",
+        example:
+          "Konum hesabı kütle merkezi gibidir: X = (1/Z)·Σ xₖaₖ, Y = (1/Z)·Σ yₖaₖ, Z = Σ aₖ (aₖ = her PMT'nin yanıtı)."
+      },
+      {
+        heading: "PET Detayları ve PET/CT",
+        body:
+          "<b>Koincidans deteksiyonu:</b> Zıt yönlerde 'aynı anda' iki olay aranır. Zaman penceresi 2–20 ns (tipik ~12 ns). <b>Kolimatöre gerek yoktur</b> → daha yüksek duyarlılık (sensitivity).<br><br>" +
+          "<b>Olay türleri:</b> Gerçek (true), saçılmış (scattered), rastgele (random) koincidans. Duyarlılık = 'true' olayları yakalama, 'random'ları reddetme kabiliyeti.<br><br>" +
+          "<b>PET vs SPECT denklemi:</b> PET'te atenüasyon terimi aktiviteden <b>ayrılabilir (separable)</b>, SPECT'te <b>ayrılamaz</b>. Bu yüzden PET'ten önce bir <b>CT</b> çekilip μ(x,y) bulunur, sonra PET projeksiyonu bu değerlere bölünerek aktivitenin Radon dönüşümü elde edilir.<br><br>" +
+          "<b>PET/CT:</b> CT yüksek çözünürlüklü anatomi, PET düşük çözünürlüklü fonksiyon verir. Birleşik sistemde hasta hareket etmeden ikisi alınır → <b>çakıştırma (registration)</b> kolaylaşır.",
+        example:
+          "PET tek başına 'nerede sıcak nokta var' der ama tam yerini anatomik olarak söyleyemez; CT eklenince 'şu organın şu kısmında' diye kesin yer belirlenir."
+      }
+    ]
+  },
+
+  /* ===================== MRI ===================== */
+  {
+    id: "mri",
+    title: "Manyetik Rezonans Görüntüleme (MRI)",
+    icon: "🧲",
+    color: "#d98fff",
+    intro:
+      "MRI, güçlü manyetik alan ve radyo dalgaları kullanarak <b>radyasyonsuz</b>, yüksek çözünürlüklü görüntü verir. En büyük üstünlüğü <b>yumuşak doku kontrastıdır (soft tissue contrast)</b> — CT'nin yapamadığı.",
+    sections: [
+      {
+        heading: "MRI Nedir? Avantaj/Dezavantaj",
+        body:
+          "• Yüksek çözünürlüklü <b>anatomik yapı</b> (CT gibi).<br>" +
+          "• Farklı yumuşak dokular arasında <b>yüksek kontrast</b> (CT bunu yapamaz).<br>" +
+          "• <b>Radyasyon yok</b> → güvenli.<br>" +
+          "• Dezavantaj: daha karmaşık donanım, <b>uzun çekim süresi</b> → harekete duyarlı.",
+        example:
+          "Beyin tümörü, MS plakları veya kıkırdak gibi yumuşak doku farkları MRI'da net görülür; CT'de bu dokular birbirine çok benzer."
+      },
+      {
+        heading: "NMR Temeli ve Spin (Nuclear Magnetic Resonance)",
+        body:
+          "Tek (odd) atom numarası veya tek kütle numaralı çekirdeklerin <b>açısal momentumu (spin)</b> vardır → bunlar 'NMR aktif'tir. Spinli her çekirdek küçük bir manyetik alan (μ) taşır.<br><br>" +
+          "Önemli çekirdekler: ¹H, ¹³C, ¹⁹F, ³¹P. Tüm vücut MRI'ında neredeyse sadece <b>¹H (hidrojen/proton)</b> kullanılır; çünkü vücutta çok yoğundur (su, yağ) ve güçlü sinyal verir.<br><br>" +
+          "<b>Gyromanyetik oran (gyromagnetic ratio, γ):</b> çekirdeğe özgü sabit. ¹H için <b>γ = 42.58 MHz/T</b>.",
+        example:
+          "γ büyük olduğu için hidrojen güçlü sinyal verir; bu yüzden MRI esasen 'vücuttaki su ve yağdaki hidrojen haritası'dır."
+      },
+      {
+        heading: "Net Manyetizasyon ve Precession (Larmor)",
+        body:
+          "Dış manyetik alan yokken spinler rastgele yönelir ve birbirini götürür (net alan = 0).<br><br>" +
+          "Güçlü <b>B₀</b> alanına konunca spinler alana göre hizalanır; hafif fazlalık 'yukarı (+z)' yönündedir → net manyetizasyon vektörü <b>M₀</b> oluşur (B₀'a paralel). M₀, B₀ ve proton yoğunluğuna (PD) bağlıdır.<br><br>" +
+          "Spinler bir frekansta döner = <b>precession</b>. Bu frekans <b>Larmor frekansıdır</b>: <span class='m' data-tex='mri_larmor'></span>. Spinler faz olarak dağınık döndüğü için x-y (enine) bileşenleri birbirini götürür; net vektör z yönündedir.",
+        example:
+          "Topaç gibi düşün: dönen topaç dik durmaz, ekseni etrafında 'salınarak döner' (precession). Larmor frekansı = bu salınımın hızı, alan ne kadar güçlüyse o kadar hızlı."
+      },
+      {
+        heading: "RF Uyarımı ve Flip Açısı (RF Excitation & Flip Angle)",
+        body:
+          "Larmor frekansında, B₀'a dik (enine/transverse düzlemde) bir <b>RF alanı (B₁)</b> uygulanır. B₁, bir antenden (verici bobin) Larmor frekansında AC akım geçirilerek üretilir; çok küçüktür (~1/10.000 T).<br><br>" +
+          "RF; (1) net manyetizasyonu enine düzleme doğru <b>devirir (tip/flip)</b> ve (2) tüm küçük spinleri <b>aynı faza</b> getirir (koherent dönüş).<br><br>" +
+          "<b>Flip/tip açısı (α):</b> M ile B₀ arasındaki son açı. Açı, RF darbesinin <b>genliğine</b> ve <b>uygulama süresine</b> bağlıdır. Açıyı α kadar değiştiren darbeye <b>α-pulse</b> denir.",
+        example:
+          "90°'lik (π/2) darbe tüm manyetizasyonu enine düzleme yatırır → maksimum sinyal verir. Bu yüzden temel uyarım çoğunlukla 90° darbedir."
+      },
+      {
+        heading: "Relaksasyon: T1, T2, T2* (Relaxation)",
+        body:
+          "RF kapatılınca sistem dengeye dönerken iki ana süreç olur:<br><br>" +
+          "<b>T1 (spin-lattice / longitudinal relaxation):</b> z yönündeki manyetizasyon Mz tekrar toparlanır (recovery). <span class='m' data-tex='mri_t1'></span>. T1, dokuya özgüdür ve yüksek alanda daha uzundur.<br><br>" +
+          "<b>T2 (spin-spin / transverse relaxation):</b> Komşu spinlerin etkisiyle faz koheransı kaybolur, enine manyetizasyon Mxy söner. <span class='m' data-tex='mri_t2'></span>.<br><br>" +
+          "<b>T2*:</b> Alan inhomojenitesi (field inhomogeneity) eklenince sinyal T2'den de <b>hızlı</b> söner. Her doku için her zaman <b>T1 > T2</b>.",
+        example:
+          "Örnek T1/T2 (ms): Gri madde 760/100, Ak madde 510/92, Yağ 210/85, Karaciğer 350/43. Yağın T1'i kısadır → T1 görüntüde parlak olur."
+      },
+      {
+        heading: "FID ve Spin Echo (Free Induction Decay & Spin Echo)",
+        svg: SVG_SPINECHO,
+        body:
+          "Net manyetizasyon değiştikçe, bir alıcı bobin (genelde verici bobinin aynısı) jeneratör mantığıyla voltaj algılar. Sönerek azalan bu sinyale <b>FID (Free Induction Decay)</b> denir; T2(*) tarafından yönetilir.<br><br>" +
+          "<b>Defaze olma (dephasing):</b> Spinler farklı Larmor frekanslarında döndüğünde faz farkı oluşur ve sinyal düşer.<br><br>" +
+          "<b>Spin Echo:</b> Önce 90° (π/2) uyarım darbesi → sonra <b>180° (π) darbe</b> defaze olmuş spinleri tekrar fazlar → bir <b>eko sinyali</b> oluşur. İlk darbe ile eko arasındaki süre <b>TE (echo time)</b>'dir. Ardışık 180° darbeler = CPMG dizisi; eko genliği T2 ile söner.",
+        example:
+          "180° darbe, dağılan koşucuları aynı anda geri çevirip bitiş çizgisinde buluşturmak gibidir → kaybolan sinyali geri toplar (echo)."
+      },
+      {
+        heading: "MR Kontrastının Kaynağı: T1/T2/PD Ağırlıklı Görüntüler",
+        body:
+          "Dokular T1, T2 ve PD (proton yoğunluğu) açısından farklıdır. <b>TR (repetition time)</b> ve <b>TE (echo time)</b> ayarlanarak sinyalin hangi özelliğe bağlı olacağı seçilir:<br><br>" +
+          "• <b>PD-ağırlıklı:</b> Uzun TR + Kısa TE → T1 ve T2 etkileri minimum.<br>" +
+          "• <b>T1-ağırlıklı:</b> Kısa TR + Kısa TE → T1 farkları öne çıkar.<br>" +
+          "• <b>T2-ağırlıklı:</b> Uzun TR + Uzun TE → T2 farkları öne çıkar.<br><br>" +
+          "Kural: TE her zaman TR'den kısadır. Kısa TR ≈ ortalama T1 (<500 ms), uzun TR > 1500 ms; kısa TE < 30 ms, uzun TE > 90 ms.",
+        example:
+          "Su/BOS (uzun T1, uzun T2): T1'de <b>koyu</b>, T2'de <b>parlak</b>. T1'de beyaz cevher parlak, BOS koyu; T2'de tam tersi. Gadolinyum kontrast T1'i kısaltır → T1'de parlaklık artar."
+      },
+      {
+        heading: "Enstrümantasyon ve Uzamsal Kodlama (Gradient Coils)",
+        body:
+          "<b>Ana mıknatıs (main magnet):</b> Silindirik süperiletken (~1 m bore). Alan 0.5–3 T (en yaygın <b>1.5 T</b>), bazıları 9 T. Alan çok homojen olmalı; dış 'fringe field' minimize edilir.<br><br>" +
+          "<b>RF bobinleri:</b> B₁'i üretir (verici) ve enine manyetizasyonu algılar (alıcı). Larmor frekansına ayarlı rezonans devreleri.<br><br>" +
+          "<b>Gradyan bobinleri (gradient coils):</b> x, y, z için üç ortogonal bobin. Ana alanın <i>büyüklüğünü</i> konuma göre değiştirir (yönünü değil) → farklı konumdaki spinler farklı frekansta döner. Bu sayede <b>kesit seçimi (slice selection), frekans kodlama (frequency encoding), faz kodlama (phase encoding)</b> yapılır.<br><br>" +
+          "Tüm sistem dış elektronik gürültüden <b>Faraday kafesi</b> (bakır kaplı oda) ile yalıtılır.",
+        example:
+          "Kesit seçimi: z-gradyanı uygulanır, sadece istenen kesitin Larmor frekansındaki RF verilir. Gradyan dik (güçlü) ise daha <b>ince kesit</b> uyarılır. İnce kesit = az çekirdek = zayıf sinyal."
+      }
+    ]
+  },
+
+  /* ================== ULTRASOUND ================== */
+  {
+    id: "us",
+    title: "Ultrason Görüntüleme (Ultrasound)",
+    icon: "🔊",
+    color: "#ff7eb6",
+    intro:
+      "Ultrason, dokuların ses dalgalarına <b>yansıtıcılığını (reflectivity)</b> ölçer. <b>Radyasyonsuz, güvenli, gerçek zamanlı, taşınabilir ve ucuzdur</b>; ama çözünürlüğü düşüktür. Doppler ile hareketli nesnelerin (kan akışı) hızını da ölçer.",
+    sections: [
+      {
+        heading: "Ultrason Nedir? EM ve Akustik Dalga Farkı",
+        body:
+          "Ultrason, dokulardan yansıyan ses ekolarını ölçerek görüntü oluşturur. Avantajları: radyasyon yok, non-invaziv, güvenli, gerçek zamanlı, taşınabilir, ucuz. Dezavantajı: düşük çözünürlük. Kullanım: fetüs, kalp ve birçok organ.<br><br>" +
+          "<b>Elektromanyetik (EM) dalga:</b> Kendi kendine yayılır, <b>ortam gerekmez</b> (boşlukta da gider). Örn: radyo, ışık, X-ışını.<br>" +
+          "<b>Akustik (ses) dalga:</b> Maddenin sıkışıp genleşmesiyle yayılan <b>basınç dalgasıdır</b>; mutlaka bir <b>ortam gerektirir</b>. Sıralama: infrases < duyulabilir ses < ultrason. Tıbbi ultrason: 2–40 MHz.",
+        example:
+          "Ses boşlukta yayılmaz — bu yüzden uzayda patlama sesi duyulmaz. Ultrasonda da prob ile cilt arasına jel sürülür ki arada hava (ses geçirmez) kalmasın."
+      },
+      {
+        heading: "Ses Dalgası Fiziği ve Akustik Empedans (Impedance)",
+        body:
+          "Ses dalgası: frekans (ξ, Hz), hız (v, m/s), dalga boyu (λ, m), şiddet (J, W/m²) ile tanımlanır.<br><br>" +
+          "<b>Ses hızı</b> ortama bağlıdır: <span class='m' data-tex='us_speed'></span> (κ: sıkıştırılabilirlik, ρ: yoğunluk). Yumuşak dokuda <b>c ≈ 1540 m/s</b>.<br><br>" +
+          "<b>Akustik basınç:</b> p = Z·v (analojii: p≈voltaj, v≈akım, Z≈empedans). Burada v = parçacık hızı (ses hızı c'den farklıdır!).<br><br>" +
+          "<b>Karakteristik (akustik) empedans:</b> <span class='m' data-tex='us_imp'></span>. Birim: rayl. Empedans, yansımanın anahtarıdır.",
+        example:
+          "Z, dokunun sese karşı 'direnci' gibidir. İki dokunun Z farkı ne kadar büyükse o sınırdan o kadar çok eko döner."
+      },
+      {
+        heading: "Sınır Olayları: Yansıma, Saçılma, Kırınım, Atenüasyon",
+        body:
+          "<b>Yansıma (reflection):</b> Geliş açısı = yansıma açısı. Dik gelişte yansıma ve iletim katsayıları:<br>" +
+          "<span class='m' data-tex='us_refl'></span> ve <span class='m' data-tex='us_trans'></span>.<br>• Z₁=Z₂ → yansıma yok. • Z₁≈Z₂ → küçük yansıma. • Z farkı çok büyük → <b>tam yansıma</b> (örn. hava/doku) → akciğer gibi havalı organlar ultrasonla görüntülenemez.<br><br>" +
+          "<b>Saçılma (scattering):</b> Küçük düzensizlikler veya pürüzlü yüzeyler dalgayı <i>çeşitli yönlere</i> dağıtır. Pürüzlü yüzeyler iyidir — eğik sınırların da görüntülenmesini sağlar.<br><br>" +
+          "<b>Kırınım (diffraction):</b> Dalga küçük bir engel/aralıktan geçerken kenarlardan bükülür/yayılır → ultrasonda <b>istenmeyen</b> etki, görüntü keskinliğini düşürür.<br>" +
+          "<b>Refraksiyon (refraction):</b> Farklı ses hızlı ortam sınırında yön değişir: sinθ₁/sinθ₂ = v₁/v₂. Yumuşak dokularda hız farkı küçük olduğundan etkisi ihmal edilir.<br><br>" +
+          "<b>Atenüasyon (attenuation):</b> Şiddet derinlikle üstel azalır: <span class='m' data-tex='us_atten'></span>. μ = μₐ (absorpsiyon, dokuyu ısıtır) + μₛ (saçılma). μ frekansla artar.",
+        example:
+          "Atenüasyon yüzünden: derin görüntü için <b>düşük frekans</b> gerekir, ama düşük frekans = düşük çözünürlük. Yani derine inmek istersen detaydan ödün verirsin."
+      },
+      {
+        heading: "Transducer ve Piezoelektrik Etki",
+        body:
+          "<b>Transducer (prob):</b> Hem üretici hem dedektördür — mekanik enerjiyi elektriğe ve tersine çevirir. Cilde bastırılınca yüksek frekanslı ses gönderir; dönen ekoları kaydeder ve 1B/2B/3B görüntüye dönüştürür. Arada hava kalmasın diye <b>jel</b> kullanılır.<br><br>" +
+          "<b>Piezoelektrik etki (piezoelectric effect):</b> Mekanik basınç → elektrik gerilimi (ve tersi: gerilim → kristalin büzülüp/gerilmesi). Yüksek frekanslı AC gerilimle kristal titreştirilerek ultrason üretilir.<br>" +
+          "Kullanılan malzemeler: <b>PZT (kurşun zirkonyum titanat)</b> ve baryum titanat (BaTiO₃).",
+        example:
+          "'Piezo' Yunanca 'baskı' demektir. Çakmakların kıvılcımı da piezoelektriktir: kristale vurursun → gerilim oluşur → kıvılcım çıkar."
+      },
+      {
+        heading: "Uzamsal Çözünürlük ve Frekans Ödünleşimi (Resolution & Trade-off)",
+        body:
+          "İki tür çözünürlük:<br>" +
+          "<b>Eksenel (axial) çözünürlük:</b> Işın doğrultusunda <i>arka arkaya</i> duran yapıları ayırma. Frekansa çok bağlıdır: ayırt etmek için <span class='m' data-tex='us_axial'></span> gerekir.<br>" +
+          "<b>Yanal (lateral) çözünürlük:</b> Yan yana duran (aynı derinlikteki) yapıları ayırma. Kabaca <span class='m' data-tex='us_lateral'></span>. Yanal çözünürlük her zaman eksenelden <b>daha kötüdür</b>.<br><br>" +
+          "<b>Frekans ödünleşimi:</b> Yüksek frekans → yüksek çözünürlük AMA yüksek atenüasyon → düşük penetrasyon. Düşük frekans → derin penetrasyon AMA düşük çözünürlük. Uygulamaya göre denge kurulur.",
+        example:
+          "Yüzeysel yapı (tiroid, damar) için yüksek frekanslı prob (net ama sığ); derin yapı (karın, fetüs) için düşük frekanslı prob (derin ama daha az net) seçilir."
+      },
+      {
+        heading: "Görüntüleme Modları: A, B, M, Doppler",
+        svg: SVG_USMODES,
+        body:
+          "<b>A-mode (Amplitude):</b> Tek hat boyunca tek darbe; her doku sınırından eko döner. 1B sinyal. x-ekseni zaman = derinlik: <span class='m' data-tex='us_depth'></span> (2'ye bölünür çünkü gidip gelir). y-ekseni eko genliği (empedans farkı). İlk pik (T) gönderilen darbe; E₁,E₂,E₃ sınır ekoları.<br><br>" +
+          "<b>B-mode (Brightness):</b> En yaygın mod. Birçok A-mode taraması birleştirilip <b>2B (veya 3B)</b> görüntü oluşturur; piksel parlaklığı = eko genliği. Farklı yönlerde birçok ışın gönderilir.<br><br>" +
+          "<b>M-mode (Motion):</b> Prob sabitken hızlı ardışık darbeler → organ <b>hareketini zamanla</b> ölçer (örn. kalp duvarı = ekokardiyografi).<br><br>" +
+          "<b>Doppler:</b> Hareketli yansıtıcıdan (örn. alyuvar) dönen ekonun frekansı kayar: <span class='m' data-tex='us_doppler'></span>. 2 katsayısı gidiş-dönüş içindir. θ=0° (akışa paralel) → maksimum; θ=90° → cosθ=0 → sinyal yok. Klinikte <b>θ < 60°</b> tercih edilir. Proba yaklaşan akış → pozitif f_D, uzaklaşan → negatif.",
+        example:
+          "Doppler = ambulans sireni mantığı: yaklaşırken tiz (yüksek frekans), uzaklaşırken pes (düşük frekans). Renkli Doppler'da yaklaşan kan kırmızı, uzaklaşan mavi gösterilir."
+      }
+    ]
+  },
+
+  /* ===================== OCT ===================== */
+  {
+    id: "oct",
+    title: "Optik Koherens Tomografi (OCT)",
+    icon: "👁️",
+    color: "#ff9ecd",
+    intro:
+      "OCT, <b>interferometri</b> tabanlı, mikrometre çözünürlüklü 3B bir görüntüleme yöntemidir. Çalışma mantığı ultrasona benzer ama <b>ses yerine ışık</b> kullanır. Radyasyonsuz, non-invaziv ve hızlıdır; <b>oftalmolojide (göz)</b> altın standarttır.",
+    sections: [
+      {
+        heading: "OCT Nedir?",
+        body:
+          "OCT, saçılan ortamlarda (birçok vücut dokusu) <b>derinlik ve yansıtıcılığı</b> ölçen, saniyeler içinde mikrometre çözünürlükte yerinde (in-situ) görüntü veren bir yöntemdir.<br><br>" +
+          "• Çalışma mantığı ultrasona benzer ama <b>ışık</b> kullanır.<br>" +
+          "• <b>İyonlaştırıcı radyasyon yok</b>, non-invaziv.<br>" +
+          "• Huang, Swanson ve Fujimoto tarafından oftalmolojide öncülük edildi; bugün klinik standarttır.",
+        example:
+          "Göz doktorunun retina katmanlarını mikron mikron gösteren cihazı OCT'dir — ışıkla alınan bir 'kesit' gibi."
+      },
+      {
+        heading: "Temel Kavramlar: Koherens, İnterferans, Bandwidth",
+        body:
+          "OCT, <b>düşük koheranslı interferometri (low-coherence interferometry)</b> kullanır. Işık hem parçacık hem dalga özelliği gösterir; OCT dalga özelliğini kullanır.<br><br>" +
+          "<b>Koherens (coherence):</b> İki dalganın <i>aynı dalga boyunda</i> ve <i>aynı faz kaymasında</i> olması.<br>" +
+          "<b>İnterferans (interference):</b> Koherent dalgalar üst üste binince birbirini güçlendirir (constructive) veya söndürür (destructive).<br>" +
+          "<b>Bandwidth:</b> Işık kaynağının yaydığı spektrumun genişliği. Monokromatik ışığın bandwidth'i 0'dır (tek dalga boyu); düşük koheranslı kaynaklar geniş spektrum yayar.",
+        example:
+          "Koherent ışık = aynı adımda yürüyen asker bölüğü; koherent olmayan ışık = rastgele yürüyen kalabalık. OCT için 'düzenli' (koherent) ışık gerekir."
+      },
+      {
+        heading: "Michelson İnterferometresi",
+        svg: SVG_MICHELSON,
+        body:
+          "İnterferansı gözlemek için <b>interferometre</b> kullanılır: ışığı iki yola böler, her yolu ayrı işler, sonra birleştirip interferans oluşturur.<br><br>" +
+          "<b>Süreç:</b> (1) Işık ortadaki yarı-geçirgen aynada ikiye bölünür. (2) Yarısı M₁ aynasına, yarısı M₂'ye gider. (3) İkisi de geri yansır. (4) Dedektöre ulaşır ve interferans oluşur.<br><br>" +
+          "Işığın katettiği mesafeye <b>yol uzunluğu (path length)</b>, iki yola <b>kollar (arms)</b> denir. İki kolun yolu eşitse → <b>yapıcı interferans (constructive)</b>. Dedektör şiddeti ölçer: <span class='m' data-tex='oct_det'></span>.",
+        example:
+          "İki kol eşit uzunluktaysa dalgalar tam üst üste biner ve dedektörde parlak (maksimum) sinyal görülür."
+      },
+      {
+        heading: "Koherens Uzunluğu (Coherence Length)",
+        body:
+          "<b>Koherens uzunluğu (lc)</b>, interferansın oluşabilmesi için iki kolun yol farkının en fazla ne kadar olabileceğini söyler. Yol farkı lc'den büyükse <b>interferans gözlenmez</b>.<br><br>" +
+          "<span class='m' data-tex='oct_coh'></span><br>(λ₀: merkez dalga boyu, Δλ: bandwidth)<br><br>" +
+          "<b>Yüksek bandwidth (Δλ büyük) → küçük lc → daha yüksek çözünürlük.</b> Referans ayna, yansıtıcının yol uzunluğuna eşitlenince ölçülen şiddet maksimum olur.",
+        example:
+          "Geniş spektrumlu (renkli) ışık kaynağı kısa koherens uzunluğu verir → derinlikte daha ince katmanları ayırt edebilirsin. Bu yüzden OCT lazer değil 'geniş bantlı' ışık ister."
+      },
+      {
+        heading: "Time-Domain OCT (Zaman Alanı)",
+        body:
+          "Michelson interferometresi görüntülemeye uyarlanır: bir ayna (M₂) <b>numuneyle (örn. hastanın gözü)</b> değiştirilir; kalan ayna M₁ <b>referans kolu (reference arm)</b> olur.<br><br>" +
+          "Düşük koheranslı ışıkla, referans aynası M₁ <b>hareket ettirilerek</b> numunedeki farklı derinliklerin yol uzunluğuyla eşleştirilir; eşleşince dedektörde şiddet piki oluşur.<br><br>" +
+          "• Tek konumda derinlik profili = <b>A-scan</b>.<br>• Işını bir hat boyunca tarayıp A-scan'leri yan yana koymak = <b>B-scan (2B görüntü)</b>.<br>• B-scan'leri tarayıp üst üste koymak = <b>hacim (3B)</b>.<br><br>" +
+          "<b>Dezavantaj:</b> Hareketli ayna örnekleme hızını sınırlar (yavaş).",
+        example:
+          "Retina B-scan'inde ortadaki çukur <b>makula</b> (en keskin görme), alttaki parlak bant retina pigment epiteli, altındaki bulutsu yapı koroid (damar ağı)."
+      },
+      {
+        heading: "Fourier-Domain OCT (SD-OCT ve SS-OCT)",
+        body:
+          "Fourier-Domain OCT'de <b>ayna hareket etmez</b>. Geniş spektrumlu ışık aynı anda gönderilir; her derinlik her dalga boyu için farklı interferans deseni üretir (her derinliğin benzersiz 'dalga boyu parmak izi' vardır). Spektrum tek seferde ölçülür ve <b>ters Fourier dönüşümü (IFFT)</b> ile A-scan elde edilir: <span class='m' data-tex='oct_fd'></span>. Hareketli parça olmadığı için <b>çok hızlıdır</b>.<br><br>" +
+          "<b>İki çeşit:</b><br>" +
+          "• <b>SD-OCT (Spectral-Domain):</b> Geniş spektrum + spektrometre tüm dalga boylarını aynı anda ölçer (prizma gibi). Çözünürlük ~3 μm, hız ~1.000.000 A-scan/s. Klinikte en yaygını.<br>" +
+          "• <b>SS-OCT (Swept-Source):</b> Işık kaynağı dalga boylarını hızla 'tarar' (λ₁→λ₂→…), tek dedektör zamanla ölçer. Çözünürlük ~5 μm, hız ~6.000.000 A-scan/s. Genelde daha hızlı, derin görüntülemede iyi.",
+        example:
+          "Time-Domain: aynayı 100 kez oynat, 100 ölçüm yap (yavaş). Fourier-Domain: tüm dalga boylarını bir kerede gönder, tek ölçüm + FFT (çok hızlı). Spektrum tüm derinlik bilgisini kodlar, FFT onu çözer."
+      },
+      {
+        heading: "Hacimsel Görüntüleme, OCT Anjiyografi ve Uygulamalar",
+        body:
+          "<b>Hacimsel görüntüleme:</b> Işın yüzeyi raster tarar → hat boyunca B-scan, B-scan'lerin her sütunu bir A-scan, yan yana B-scan'ler → 3B hacim. Fourier-Domain'le (yüksek hız, hareketli parça yok, gerçek zamanlı 3B) yaygınlaştı.<br><br>" +
+          "<b>OCT Anjiyografi:</b> Kan hücreleri OCT dalga boyuna yakın boyuttadır (alyuvar 6–8 μm) → yüksek <b>benek gürültüsü (speckle)</b> oluşturur. Aynı bölge defalarca taranıp <b>varyans haritası</b> çıkarılır; damarlar yüksek yanıt verir → <b>kontrast madde olmadan</b> damarlar görüntülenir. Hızlı ardışık taramalarla kan akış hızı bile tahmin edilebilir.<br><br>" +
+          "<b>Uygulamalar:</b> Oftalmoloji (standart), kardiyovasküler (kateter içine optik fiber → damar duvarı, plak/kalsifikasyon; damar içi ultrasondan daha yüksek çözünürlük), gastrointestinal (yemek borusu/kolon, erken kanser), dermatoloji (cilt kanseri, anjiyografi ile artmış kan akışı).",
+        example:
+          "OCT anjiyografi, boya/iğne kullanmadan retina damarlarını gösterir → bu yüzden hastayı yormadan tekrar tekrar çekilebilir."
+      }
+    ]
+  }
+];
+
+/* ---------- 2) BİLGİ KARTLARI (Flashcards) ---------- */
+const FLASHCARDS = [
+  // CT
+  { topic: "CT", q: "Tomografi ne demektir?", a: "Bir <b>dilim (slice)</b> görüntüsü; düz röntgende üst üste binen yapıları ayırır. 'Computed' = bilgisayarla geri çatma gerekir." },
+  { topic: "CT", q: "CT hangi tür görüntülemedir?", a: "<b>İletim (transmission)</b> görüntüleme — X-ışını dışarıdan verilir, vücuttan geçer. <b>Anatomik</b> yapı gösterir." },
+  { topic: "CT", q: "3G (3. nesil) tarayıcının yeniliği nedir?", a: ">800 detektör + tüm hastayı kaplayan fan beam → <b>kayma (translation) hareketi ortadan kalktı</b>. Tüp+detektör birlikte döner, ~0.5 s." },
+  { topic: "CT", q: "4G tarayıcı nasıl çalışır?", a: "Tek <b>dönen kaynak</b> + <b>sabit (stationary) detektör halkası</b>. Detektörler collimated değildir." },
+  { topic: "CT", q: "5G (Electron Beam CT) ne için geliştirildi?", a: "Klasik X-ışını tüpü yoktur; elektron demeti tungsten halkaya yönlendirilir. ~50 ms → <b>atan kalbin</b> (kardiyak) görüntülemesi." },
+  { topic: "CT", q: "Helical (6G) CT'nin avantajı?", a: "Masa <b>hareket ederken</b> veri toplanır → çok hızlı, az kontrast madde, çoğu zaman tek <b>nefes tutmada</b> biter." },
+  { topic: "CT", q: "Neden basit denklem çözmek CT'de pratik değil?", a: "1000×1000 görüntü = 1 milyon bilinmeyen → 10¹² katsayılı dev matris. Bunun yerine <b>geri projeksiyon</b> kullanılır." },
+  { topic: "CT", q: "Geri projeksiyon (backprojection) tek başına neden yetersiz?", a: "Görüntüyü <b>bulanık (blurry)</b> üretir. Bu yüzden <b>filtre</b> eklenir → Filtered Backprojection." },
+  { topic: "CT", q: "Radon dönüşümü nedir?", a: "Bir görüntünün belirli açılardaki tüm <b>çizgi integralleri</b>: g(l,θ)=∫f ds. Tümü birleşince <b>sinogram</b> olur." },
+  { topic: "CT", q: "Sinogramda eksenler nedir?", a: "Yatay = detektör <b>konumu (l)</b>, dikey = projeksiyon <b>açısı (θ)</b>. Tek nokta sinüs eğrisi çizer." },
+  { topic: "CT", q: "Projeksiyon-Dilim (Fourier-Slice) Teoremi?", a: "Bir projeksiyonun <b>1B FT'si</b> = görüntünün <b>2B FT'sinin</b> o açıdaki dilimidir. Tüm dilimler → 2B IFT → görüntü." },
+  { topic: "CT", q: "Ramp filtresi (|ρ|) ne işe yarar?", a: "Yüksek geçiren filtre; Fourier'de yüksek frekanslardaki <b>seyrek örneklemeyi telafi eder</b>, bulanıklığı giderir. Genelde Hamming penceresiyle sınırlanır." },
+  // Nuclear
+  { topic: "Nükleer", q: "Nükleer tıp hangi tür görüntülemedir?", a: "<b>Emisyon (emission)</b> görüntüleme — gamma vücudun <i>içinden</i> yayılır. <b>Fonksiyon/metabolizma</b> gösterir, anatomi değil." },
+  { topic: "Nükleer", q: "Radyoaktivitenin birimleri?", a: "<b>Curie (Ci):</b> 1 Ci = 3.7×10¹⁰ bozunma/s. <b>SI: Becquerel (Bq):</b> 1 Bq = 1 bozunma/s." },
+  { topic: "Nükleer", q: "Yarı ömür (half-life) formülü ve önemi?", a: "T½ = ln2/λ. Çok kısa olursa dedektör yakalayamaz, çok uzun olursa hasta fazla ışınlanır. İdeal: <b>dakika–saat</b>." },
+  { topic: "Nükleer", q: "Görüntülemede kullanılan iki bozunma modu?", a: "<b>Gamma ışını</b> (sintigrafi/SPECT) ve <b>pozitron</b> (PET). Alfa/beta görüntülemede kullanılmaz." },
+  { topic: "Nükleer", q: "Pozitron bozunması ne üretir?", a: "Pozitron bir elektronla <b>annihilation</b> yapar → zıt yönlerde <b>iki adet 511 keV</b> gamma fotonu (PET'in temeli)." },
+  { topic: "Nükleer", q: "İdeal radyotracer foton enerjisi?", a: "<b>70–511 keV</b>: vücuttan az zayıflayıp çıkacak kadar yüksek, ama dedekte edilemeyecek kadar yüksek değil. Tercihen <b>monoenerjik</b>." },
+  { topic: "Nükleer", q: "En yaygın radyotracer ve özellikleri?", a: "<b>Tc-99m:</b> yarı ömür 6 saat, foton enerjisi 140 keV, saf gamma yayıcı." },
+  { topic: "Nükleer", q: "Anger kamerada sintilasyon kristali?", a: "<b>NaI(Tl)</b> (talyum katkılı sodyum iyodür). Gamma fotonu binlerce ışık fotonuna çevirir. Kalın = yüksek enerji, ince = düşük enerji." },
+  { topic: "Nükleer", q: "PMT (fotoçoğaltıcı tüp) görevi?", a: "Işık sinyalini <b>elektrik sinyaline çevirir</b> ve <b>yükseltir</b>. Fotokatot + dinotlardan oluşur." },
+  { topic: "Nükleer", q: "Pulse Height Analyzer (PHA) ne yapar?", a: "Alt eşik → düşük enerjili <b>Compton saçılmalarını</b> eler; üst eşik → yüksek enerjili <b>çoklu olayları</b> eler. Sadece tam enerjili fotonlar görüntüye girer." },
+  { topic: "Nükleer", q: "SPECT planar sintigrafiden farkı?", a: "Dönen Anger kamerasıyla <b>birçok açıdan</b> projeksiyon alır (CT gibi) → kesit görüntü. Planar tek açıdandır." },
+  { topic: "Nükleer", q: "PET'te koincidans deteksiyonu?", a: "Zıt yöndeki iki 511 keV fotonu '<b>aynı anda</b>' (zaman penceresi ~12 ns) yakalamak. <b>Kolimatör gerekmez</b> → yüksek duyarlılık." },
+  { topic: "Nükleer", q: "PET ile SPECT denklemi arasındaki kilit fark?", a: "PET'te atenüasyon <b>aktiviteden ayrılabilir (separable)</b>, SPECT'te ayrılamaz. Bu yüzden PET öncesi <b>CT</b> ile μ bulunur." },
+  { topic: "Nükleer", q: "PET/CT neden birleştirildi?", a: "CT → yüksek çözünürlüklü <b>anatomi</b>; PET → <b>fonksiyon</b>. Hasta hareket etmeden ikisi alınınca <b>çakıştırma (registration)</b> kolaylaşır." },
+  // MRI
+  { topic: "MRI", q: "MRI'ın CT'ye karşı en büyük üstünlüğü?", a: "Üstün <b>yumuşak doku kontrastı (soft tissue contrast)</b> ve <b>radyasyon yok</b>. Dezavantaj: yavaş, harekete duyarlı." },
+  { topic: "MRI", q: "Hangi çekirdek MRI'da kullanılır ve neden?", a: "<b>¹H (proton)</b>; vücutta çok yoğun (su/yağ) ve güçlü sinyal verir. γ = 42.58 MHz/T." },
+  { topic: "MRI", q: "Larmor frekansı formülü?", a: "<b>ω₀ = γ·B₀</b>. Alan ne kadar güçlüyse spinler o kadar hızlı precess eder." },
+  { topic: "MRI", q: "Denge anında net manyetizasyon neden z yönünde?", a: "Spinler faz olarak dağınık döndüğü için <b>enine (x-y) bileşenler birbirini götürür</b>; sadece +z (M₀) kalır." },
+  { topic: "MRI", q: "Flip (tip) açısı neye bağlı?", a: "RF darbesinin <b>genliğine</b> ve <b>uygulama süresine</b>. 90° (π/2) darbe maksimum sinyal verir." },
+  { topic: "MRI", q: "T1 relaksasyon nedir?", a: "<b>Spin-lattice / longitudinal.</b> Mz dengeye geri toparlanır: Mz(t)=M₀(1−e^(−t/T1)). Yüksek alanda T1 uzar." },
+  { topic: "MRI", q: "T2 relaksasyon nedir?", a: "<b>Spin-spin / transverse.</b> Faz koheransı kaybolur, Mxy söner: Mxy(t)=M₀·e^(−t/T2)." },
+  { topic: "MRI", q: "T1 mi T2 mi büyüktür?", a: "Aynı doku için <b>her zaman T1 > T2</b>. T2* ise alan inhomojenitesi yüzünden T2'den de hızlı söner." },
+  { topic: "MRI", q: "FID nedir?", a: "<b>Free Induction Decay</b> — sönerek azalan NMR sinyali; bobinde algılanan voltaj. T2(*) tarafından yönetilir." },
+  { topic: "MRI", q: "Spin echo nasıl oluşur?", a: "90° uyarımdan sonra <b>180° darbe</b> defaze spinleri yeniden fazlar → <b>eko</b>. Uyarım–eko süresi = <b>TE</b>." },
+  { topic: "MRI", q: "T1-ağırlıklı görüntü parametreleri?", a: "<b>Kısa TR + Kısa TE.</b> T1 farkları öne çıkar. (Yağ parlak, su/BOS koyu.)" },
+  { topic: "MRI", q: "T2-ağırlıklı görüntü parametreleri?", a: "<b>Uzun TR + Uzun TE.</b> T2 farkları öne çıkar. (Su/BOS parlak.)" },
+  { topic: "MRI", q: "PD-ağırlıklı görüntü parametreleri?", a: "<b>Uzun TR + Kısa TE.</b> T1 ve T2 etkileri minimum, proton yoğunluğu baskın." },
+  { topic: "MRI", q: "Gradient (gradyan) bobinlerinin görevi?", a: "Ana alanın <b>büyüklüğünü konuma göre</b> değiştirir → kesit seçimi, frekans ve faz kodlama. Yönü değiştirmez." },
+  { topic: "MRI", q: "En yaygın klinik MRI alan gücü?", a: "<b>1.5 Tesla.</b> Aralık 0.5–3 T (bazı sistemler 9 T). Süperiletken silindirik mıknatıs." },
+  { topic: "MRI", q: "Faraday kafesi neden gerekli?", a: "Dış elektronik gürültüyü (örn. radyo sinyalleri) engellemek için; sistem bakır kaplı odaya alınır." },
+  // Ultrasound
+  { topic: "Ultrason", q: "Ultrasonun avantaj ve dezavantajı?", a: "Avantaj: radyasyonsuz, güvenli, gerçek zamanlı, taşınabilir, ucuz. Dezavantaj: <b>düşük çözünürlük</b>." },
+  { topic: "Ultrason", q: "EM dalga ile akustik dalga farkı?", a: "EM dalga ortam gerektirmez (boşlukta gider). <b>Akustik dalga ortam gerektirir</b> — basınç dalgasıdır." },
+  { topic: "Ultrason", q: "Yumuşak dokuda ses hızı?", a: "<b>c ≈ 1540 m/s.</b> c = 1/√(κρ); ortamın sıkıştırılabilirliği ve yoğunluğuna bağlı." },
+  { topic: "Ultrason", q: "Akustik empedans (Z) nedir?", a: "<b>Z = ρ·c</b> (yoğunluk × ses hızı). Birim: rayl. İki doku arasındaki Z farkı yansımayı belirler." },
+  { topic: "Ultrason", q: "Yansıma katsayısı R formülü?", a: "R = ((Z₂−Z₁)/(Z₂+Z₁))². Z₁=Z₂ → yansıma yok; Z farkı çok büyük → <b>tam yansıma</b>." },
+  { topic: "Ultrason", q: "Akciğer neden ultrasonla görüntülenemez?", a: "Hava ile doku arasında Z farkı çok büyük → neredeyse tüm dalga yansır (<b>total reflection</b>), içeri giremez." },
+  { topic: "Ultrason", q: "Atenüasyon yasası?", a: "J(x)=J₀·e^(−μx). μ = absorpsiyon (μₐ, dokuyu ısıtır) + saçılma (μₛ). <b>Frekans arttıkça μ artar</b>." },
+  { topic: "Ultrason", q: "Piezoelektrik etki nedir?", a: "Mekanik basınç ↔ elektrik gerilimi dönüşümü. Transducer bununla ses üretir/algılar. Malzeme: <b>PZT</b>, BaTiO₃." },
+  { topic: "Ultrason", q: "Eksenel (axial) çözünürlük kuralı?", a: "<b>Δz ≥ λ/2.</b> Işın doğrultusunda arka arkaya yapıları ayırır; frekansa çok bağlıdır." },
+  { topic: "Ultrason", q: "Yanal (lateral) çözünürlük?", a: "<b>Δx ∼ 3λ.</b> Yan yana yapıları ayırır; her zaman eksenelden <b>daha kötüdür</b>." },
+  { topic: "Ultrason", q: "Frekans ödünleşimi (trade-off)?", a: "Yüksek f → yüksek çözünürlük + düşük penetrasyon. Düşük f → derin penetrasyon + düşük çözünürlük." },
+  { topic: "Ultrason", q: "A-mode'da derinlik nasıl bulunur?", a: "<b>d = c·t/2</b> (gidip geldiği için 2'ye bölünür). x-ekseni zaman=derinlik, y-ekseni eko genliği." },
+  { topic: "Ultrason", q: "B-mode nedir?", a: "<b>Brightness mode</b> — birçok A-mode birleşip 2B/3B görüntü; piksel parlaklığı = eko genliği. En yaygın mod." },
+  { topic: "Ultrason", q: "M-mode ne için kullanılır?", a: "<b>Motion mode</b> — organ hareketini zamanla ölçer; örn. kalp duvarı (ekokardiyografi)." },
+  { topic: "Ultrason", q: "Doppler kayması formülü?", a: "f_D = 2·f₀·v·cosθ/c. θ=0° → maksimum, θ=90° → sinyal yok. Klinikte θ<60° tercih edilir." },
+  // OCT
+  { topic: "OCT", q: "OCT temel mantığı?", a: "<b>İnterferometri</b> tabanlı, mikrometre çözünürlüklü 3B görüntüleme. Ultrasona benzer ama <b>ışık</b> kullanır. Radyasyon yok." },
+  { topic: "OCT", q: "OCT'nin asıl (standart) uygulama alanı?", a: "<b>Oftalmoloji</b> (retina görüntüleme) — günlük klinik standart. Diğerleri: kardiyovasküler, GI, dermatoloji." },
+  { topic: "OCT", q: "Koherens uzunluğu formülü ve etkisi?", a: "lc = (2ln2/π)·(λ₀²/Δλ). <b>Yüksek bandwidth → küçük lc → yüksek çözünürlük.</b>" },
+  { topic: "OCT", q: "Michelson interferometresinde 'arm' ve 'path length'?", a: "Işığın iki yolu = <b>kollar (arms)</b>; katettiği mesafe = <b>yol uzunluğu</b>. Yollar eşitse yapıcı interferans." },
+  { topic: "OCT", q: "A-scan, B-scan, hacim nedir?", a: "<b>A-scan</b> = tek konum derinlik profili. <b>B-scan</b> = hat boyunca A-scan'ler (2B). Hacim = yan yana B-scan'ler (3B)." },
+  { topic: "OCT", q: "Time-Domain OCT'nin dezavantajı?", a: "Referans aynası <b>hareket eder</b> → örnekleme hızını sınırlar (yavaş)." },
+  { topic: "OCT", q: "Fourier-Domain OCT neden hızlı?", a: "<b>Ayna hareket etmez.</b> Tüm spektrum bir kerede ölçülür, IFFT ile A-scan: I(z)=FFT⁻¹[S(λ)]." },
+  { topic: "OCT", q: "SD-OCT vs SS-OCT?", a: "<b>SD-OCT:</b> spektrometre, ~3 μm, ~1M A-scan/s (en yaygın). <b>SS-OCT:</b> taranan lazer, ~5 μm, ~6M A-scan/s (daha hızlı)." },
+  { topic: "OCT", q: "OCT anjiyografi nasıl çalışır?", a: "Aynı bölge defalarca taranır, <b>varyans haritası</b> çıkarılır; hareketli kan yüksek speckle verir → <b>kontrast madde olmadan</b> damarlar görünür." }
+];
+
+/* ---------- 3) İNGİLİZCE TERİMLER (Glossary) ---------- */
+const TERMS = [
+  // CT
+  { topic: "CT", en: "Tomography", tr: "Tomografi — bir dilim/kesit görüntüsü." },
+  { topic: "CT", en: "Transmission imaging", tr: "İletim görüntüleme — ışın dışarıdan verilir, vücuttan geçer (CT, röntgen)." },
+  { topic: "CT", en: "Attenuation (μ)", tr: "Zayıflama — ışının dokudan geçerken şiddetinin azalması." },
+  { topic: "CT", en: "Reconstruction algorithm", tr: "Geri çatma algoritması — projeksiyonlardan görüntüyü hesaplama." },
+  { topic: "CT", en: "Fan beam", tr: "Yelpaze huzme — yelpaze şeklinde X-ışını demeti (2G+)." },
+  { topic: "CT", en: "Detector array", tr: "Detektör dizisi — çok sayıda detektör." },
+  { topic: "CT", en: "Helical / Spiral CT", tr: "Sarmal CT — masa hareket ederken veri toplanır." },
+  { topic: "CT", en: "Multislice", tr: "Çok kesitli — tek dönüşte birden çok kesit." },
+  { topic: "CT", en: "Backprojection", tr: "Geri projeksiyon — projeksiyonu geldiği çizgi boyunca geri yayma." },
+  { topic: "CT", en: "Radon transform", tr: "Radon dönüşümü — tüm açılardaki çizgi integralleri." },
+  { topic: "CT", en: "Sinogram", tr: "Sinogram — Radon dönüşümünün görüntüsü (konum × açı)." },
+  { topic: "CT", en: "Projection / Fourier-Slice Theorem", tr: "Projeksiyon-Dilim Teoremi — 1B FT projeksiyon = 2B FT'nin dilimi." },
+  { topic: "CT", en: "Filtered Backprojection (FBP)", tr: "Filtrelenmiş geri projeksiyon — standart CT geri çatma yöntemi." },
+  { topic: "CT", en: "Ramp filter (|ρ|)", tr: "Rampa filtresi — yüksek geçiren, bulanıklığı gideren filtre." },
+  { topic: "CT", en: "Hamming windowing", tr: "Hamming pencereleme — ramp filtresini sınırlayıp gürültüyü azaltır." },
+  { topic: "CT", en: "Shepp-Logan phantom", tr: "Test/benchmark için kullanılan standart beyin fantomu." },
+  // Nuclear
+  { topic: "Nükleer", en: "Emission imaging", tr: "Emisyon görüntüleme — radyasyon vücudun içinden yayılır." },
+  { topic: "Nükleer", en: "Functional imaging", tr: "Fonksiyonel görüntüleme — anatomi değil metabolizma/işlev." },
+  { topic: "Nükleer", en: "Radioactive decay", tr: "Radyoaktif bozunma — çekirdeğin düşük enerjiye geçişi." },
+  { topic: "Nükleer", en: "Disintegration", tr: "Bir atomun bozunması (decay olayı)." },
+  { topic: "Nükleer", en: "Curie (Ci)", tr: "Radyoaktivite birimi: 1 Ci = 3.7×10¹⁰ bozunma/s." },
+  { topic: "Nükleer", en: "Becquerel (Bq)", tr: "SI radyoaktivite birimi: 1 Bq = 1 bozunma/s." },
+  { topic: "Nükleer", en: "Half-life (T½)", tr: "Yarı ömür — radyoaktivitenin yarıya inme süresi." },
+  { topic: "Nükleer", en: "Decay constant (λ)", tr: "Bozunma sabiti — birim zamanda bozunma olasılığı." },
+  { topic: "Nükleer", en: "Gamma decay / Isomeric transition", tr: "Gamma bozunması — çekirdek foton yayar (Tc-99m→Tc-99)." },
+  { topic: "Nükleer", en: "Positron decay (β⁺)", tr: "Pozitron bozunması — proton→nötron+pozitron+nötrino." },
+  { topic: "Nükleer", en: "Annihilation", tr: "Yok olma — pozitron+elektron → iki 511 keV foton." },
+  { topic: "Nükleer", en: "Isotope", tr: "İzotop — aynı proton, farklı kütle numarası." },
+  { topic: "Nükleer", en: "Isomer", tr: "İzomer — aynı izotop, farklı enerji seviyesi (metastable)." },
+  { topic: "Nükleer", en: "Radiotracer", tr: "Radyoizleyici — vücuda verilen radyoaktif madde." },
+  { topic: "Nükleer", en: "Monoenergetic", tr: "Tek enerjili — saçılan fotonları ayırt etmeyi sağlar." },
+  { topic: "Nükleer", en: "Planar scintigraphy", tr: "Düzlemsel sintigrafi — tek açıdan gamma görüntüleme." },
+  { topic: "Nükleer", en: "SPECT", tr: "Single Photon Emission CT — dönen kamera, çok açılı." },
+  { topic: "Nükleer", en: "PET", tr: "Positron Emission Tomography — koincidans tabanlı." },
+  { topic: "Nükleer", en: "Anger (scintillation) camera", tr: "Anger kamerası — gamma yakalayan sintilasyon kamerası." },
+  { topic: "Nükleer", en: "Collimator", tr: "Kolimatör — sadece doğru yönlü fotonları geçiren kurşun ızgara." },
+  { topic: "Nükleer", en: "Scintillation crystal — NaI(Tl)", tr: "Sintilasyon kristali — gamma'yı ışığa çevirir." },
+  { topic: "Nükleer", en: "Photomultiplier tube (PMT)", tr: "Fotoçoğaltıcı tüp — ışığı elektriğe çevirip yükseltir." },
+  { topic: "Nükleer", en: "Pulse Height Analyzer (PHA)", tr: "Enerji eşikleriyle saçılmış/çoklu olayları eleyen devre." },
+  { topic: "Nükleer", en: "Coincidence detection", tr: "Koincidans deteksiyonu — zıt iki fotonu eşzamanlı yakalama." },
+  { topic: "Nükleer", en: "Sensitivity", tr: "Duyarlılık — gerçek olayları yakalama / rastgeleyi reddetme." },
+  // MRI
+  { topic: "MRI", en: "Soft tissue contrast", tr: "Yumuşak doku kontrastı — MRI'ın en güçlü yanı." },
+  { topic: "MRI", en: "Nuclear Magnetic Resonance (NMR)", tr: "MRI'ın temelindeki fizik olayı." },
+  { topic: "MRI", en: "Spin", tr: "Çekirdeğin açısal momentumu; manyetik moment taşır." },
+  { topic: "MRI", en: "Gyromagnetic ratio (γ)", tr: "Jiromanyetik oran — ¹H için 42.58 MHz/T." },
+  { topic: "MRI", en: "Precession", tr: "Presesyon — spinlerin alan etrafında salınarak dönmesi." },
+  { topic: "MRI", en: "Larmor frequency (ω₀=γB₀)", tr: "Larmor frekansı — presesyon frekansı." },
+  { topic: "MRI", en: "Net magnetization (M₀)", tr: "Net manyetizasyon — B₀'a paralel denge vektörü." },
+  { topic: "MRI", en: "RF excitation / B₁", tr: "RF uyarımı — manyetizasyonu enine düzleme deviren alan." },
+  { topic: "MRI", en: "Flip / Tip angle (α)", tr: "Devirme açısı — RF genliği ve süresiyle belirlenir." },
+  { topic: "MRI", en: "T1 (spin-lattice / longitudinal)", tr: "Mz'nin dengeye toparlanma süresi." },
+  { topic: "MRI", en: "T2 (spin-spin / transverse)", tr: "Mxy'nin sönme (defaze) süresi." },
+  { topic: "MRI", en: "T2*", tr: "Alan inhomojenitesi nedeniyle T2'den hızlı sönme." },
+  { topic: "MRI", en: "Free Induction Decay (FID)", tr: "Sönerek azalan NMR sinyali." },
+  { topic: "MRI", en: "Dephasing", tr: "Defaze olma — spinlerin faz farkıyla sinyalin düşmesi." },
+  { topic: "MRI", en: "Spin echo", tr: "180° darbeyle kaybolan sinyali geri toplama." },
+  { topic: "MRI", en: "TR (repetition time)", tr: "Ardışık uyarım darbeleri arası süre." },
+  { topic: "MRI", en: "TE (echo time)", tr: "Uyarım ile eko arası süre." },
+  { topic: "MRI", en: "Proton density (PD)", tr: "Proton yoğunluğu — kontrast kaynaklarından biri." },
+  { topic: "MRI", en: "Gradient coils", tr: "Gradyan bobinleri — uzamsal kodlama (kesit/frekans/faz)." },
+  { topic: "MRI", en: "Slice selection", tr: "Kesit seçimi — z-gradyanı + seçici RF." },
+  { topic: "MRI", en: "Frequency / Phase encoding", tr: "Frekans/faz kodlama — düzlem içi konum belirleme." },
+  { topic: "MRI", en: "Faraday cage", tr: "Faraday kafesi — dış RF gürültüsünü engelleyen ekran." },
+  { topic: "MRI", en: "Gadolinium contrast", tr: "Gadolinyum kontrast — T1'i kısaltır, T1'de parlaklık artırır." },
+  // Ultrasound
+  { topic: "Ultrason", en: "Reflectivity", tr: "Yansıtıcılık — dokunun sesi geri yansıtma derecesi." },
+  { topic: "Ultrason", en: "Acoustic wave", tr: "Akustik dalga — ortam gerektiren basınç dalgası." },
+  { topic: "Ultrason", en: "Acoustic impedance (Z=ρc)", tr: "Akustik empedans — yansımayı belirleyen büyüklük." },
+  { topic: "Ultrason", en: "Compressibility (κ)", tr: "Sıkıştırılabilirlik — ses hızını etkiler." },
+  { topic: "Ultrason", en: "Reflection coefficient (R)", tr: "Yansıma katsayısı." },
+  { topic: "Ultrason", en: "Transmission coefficient (T)", tr: "İletim katsayısı." },
+  { topic: "Ultrason", en: "Scattering", tr: "Saçılma — küçük/pürüzlü yapılardan dağınık yansıma." },
+  { topic: "Ultrason", en: "Diffraction", tr: "Kırınım — dalganın engel kenarından bükülmesi (istenmez)." },
+  { topic: "Ultrason", en: "Refraction", tr: "Kırılma — farklı hızlı ortam sınırında yön değişimi." },
+  { topic: "Ultrason", en: "Attenuation (J=J₀e^(−μx))", tr: "Zayıflama — şiddetin derinlikle üstel azalması." },
+  { topic: "Ultrason", en: "Absorption (μₐ)", tr: "Absorpsiyon — enerjiyi ısıya çevirir." },
+  { topic: "Ultrason", en: "Transducer", tr: "Transducer/prob — sesi hem üretir hem algılar." },
+  { topic: "Ultrason", en: "Piezoelectric effect", tr: "Piezoelektrik etki — basınç↔gerilim dönüşümü (PZT)." },
+  { topic: "Ultrason", en: "Axial resolution (Δz≥λ/2)", tr: "Eksenel çözünürlük — arka arkaya yapılar." },
+  { topic: "Ultrason", en: "Lateral resolution (Δx∼3λ)", tr: "Yanal çözünürlük — yan yana yapılar (daha kötü)." },
+  { topic: "Ultrason", en: "A-mode", tr: "Amplitude mode — 1B eko-genlik profili." },
+  { topic: "Ultrason", en: "B-mode", tr: "Brightness mode — 2B/3B parlaklık görüntüsü (en yaygın)." },
+  { topic: "Ultrason", en: "M-mode", tr: "Motion mode — hareketi zamanla ölçer (ekokardiyografi)." },
+  { topic: "Ultrason", en: "Doppler effect", tr: "Doppler etkisi — hareketle frekans kayması (kan akışı)." },
+  { topic: "Ultrason", en: "Doppler shift (f_D)", tr: "Doppler kayması — f_D=2f₀v cosθ/c." },
+  // OCT
+  { topic: "OCT", en: "Optical Coherence Tomography", tr: "Optik koherens tomografi — ışıkla 3B mikron görüntüleme." },
+  { topic: "OCT", en: "Interferometry", tr: "İnterferometri — interferansla ölçüm yapma." },
+  { topic: "OCT", en: "Coherence", tr: "Koherens — aynı dalga boyu ve faz." },
+  { topic: "OCT", en: "Interference", tr: "İnterferans — dalgaların güçlenmesi/sönmesi." },
+  { topic: "OCT", en: "Bandwidth (Δλ)", tr: "Bant genişliği — kaynağın yaydığı spektrum genişliği." },
+  { topic: "OCT", en: "Low-coherence light", tr: "Düşük koheranslı ışık — geniş spektrum, kısa lc." },
+  { topic: "OCT", en: "Michelson interferometer", tr: "Michelson interferometresi — ışığı iki kola bölen düzenek." },
+  { topic: "OCT", en: "Path length / Arms", tr: "Yol uzunluğu / kollar — interferometre yolları." },
+  { topic: "OCT", en: "Coherence length (lc)", tr: "Koherens uzunluğu — interferans için izinli yol farkı." },
+  { topic: "OCT", en: "Time-Domain OCT (TD-OCT)", tr: "Zaman alanı OCT — hareketli ayna (yavaş)." },
+  { topic: "OCT", en: "Fourier-Domain OCT (FD-OCT)", tr: "Fourier alanı OCT — aynasız, spektrum+FFT (hızlı)." },
+  { topic: "OCT", en: "SD-OCT (Spectral-Domain)", tr: "Spektrometre tabanlı FD-OCT (~3 μm)." },
+  { topic: "OCT", en: "SS-OCT (Swept-Source)", tr: "Taranan lazerli FD-OCT (~5 μm, çok hızlı)." },
+  { topic: "OCT", en: "A-scan / B-scan", tr: "A-scan: derinlik profili; B-scan: 2B kesit." },
+  { topic: "OCT", en: "OCT Angiography", tr: "OCT anjiyografi — kontrastsız damar görüntüleme (speckle/varyans)." },
+  { topic: "OCT", en: "Speckle noise", tr: "Benek gürültüsü — dalga boyu ölçekli yapılardan (örn. kan hücreleri)." }
+];
+
+/* ---------- 4) TEST SORULARI (100 English MCQ) ---------- */
+const QUESTIONS = [
+  {"topic":"CT","q":"What does 'computed' in Computed Tomography imply?","options":["A computer and reconstruction algorithm are required","The image is captured directly on film","It uses radioactive computation","It computes blood flow velocity"],"answer":0,"explain":"CT requires a computer running a reconstruction algorithm to build the slice image from projections."},
+  {"topic":"CT","q":"CT is an example of which type of imaging?","options":["Emission imaging","Transmission imaging","Functional imaging","Interferometric imaging"],"answer":1,"explain":"In CT, X-rays are transmitted through the body from an outside source to a detector (transmission imaging)."},
+  {"topic":"CT","q":"What is the main advantage introduced by 3rd-generation (3G) CT scanners?","options":["Elimination of translational motion via a wide fan beam","Use of electron beams","Moving the patient table during scan","Stationary detector ring"],"answer":0,"explain":"3G uses >800 detectors and a fan beam covering the whole patient, eliminating the need for translation; tube and detectors only rotate."},
+  {"topic":"CT","q":"In a 4th-generation (4G) scanner, the detectors are:","options":["A single rotating detector","Collimated as a pencil beam","Mounted on the X-ray tube","A stationary ring of detectors"],"answer":3,"explain":"4G has a single rotating source and a large stationary ring of (non-collimated) detectors."},
+  {"topic":"CT","q":"Electron Beam CT (5G) was developed primarily for:","options":["Bone densitometry","Brain perfusion","Cardiac (beating heart) imaging","Fetal imaging"],"answer":2,"explain":"EBCT has ~50 ms scan times and was developed specifically for cardiac tomographic imaging of the beating heart."},
+  {"topic":"CT","q":"A key advantage of helical (spiral) CT is:","options":["No computer needed","Higher radiation dose required","Data acquired while the table moves, enabling single breath-hold scans","It eliminates the X-ray tube"],"answer":2,"explain":"Helical CT acquires data while the table moves, shortening scan time and often allowing a single breath-hold."},
+  {"topic":"CT","q":"For a 1000×1000 image, why is solving a direct system of equations impractical?","options":["It needs 1 million unknowns and a ~10¹² coefficient matrix","There are only 4 unknowns","Computers cannot do addition","The projections are always unique"],"answer":0,"explain":"1000×1000 = 1 million unknowns, producing a 1M×1M (10¹²-coefficient) matrix — impractical, so backprojection methods are used."},
+  {"topic":"CT","q":"Simple (unfiltered) backprojection produces images that are:","options":["Perfectly sharp","Blurry","Black","Inverted"],"answer":1,"explain":"Unfiltered backprojection smears values back and yields a blurry reconstruction, requiring filtering."},
+  {"topic":"CT","q":"The Radon transform g(l,θ) represents:","options":["The 2D Fourier transform","Line integrals of the image at angle θ","The pixel histogram","The attenuation of a single point"],"answer":1,"explain":"The Radon transform is the set of line integrals g(l,θ)=∫f ds through the object at angle θ."},
+  {"topic":"CT","q":"In a sinogram, the two axes correspond to:","options":["Detector position (l) and projection angle (θ)","Time and amplitude","Frequency and phase","x and y pixel coordinates"],"answer":0,"explain":"A sinogram plots detector position (l) vs projection angle (θ); a single point traces a sinusoid."},
+  {"topic":"CT","q":"The Projection-Slice (Fourier-Slice) Theorem states that the 1D FT of a projection equals:","options":["The 2D FT of the whole image","The ramp filter","The inverse Radon transform","A slice through the 2D FT of the image at the same angle"],"answer":3,"explain":"The 1D FT of a projection at angle θ equals a radial slice of the image's 2D FT at that angle."},
+  {"topic":"CT","q":"Why does naive Fourier-domain reconstruction give blurry images?","options":["Low frequencies are undersampled","It uses too many detectors","The patient moves","High frequencies (fine detail) are sparsely sampled"],"answer":3,"explain":"Fourier samples are dense near the origin (low freq) and sparse far out (high freq), so fine detail is poorly reconstructed → blur."},
+  {"topic":"CT","q":"The |ρ| ramp filter in FBP is best described as a:","options":["High-pass filter that compensates sparse high-frequency sampling","Low-pass filter","Band-stop filter","Median filter"],"answer":0,"explain":"|ρ| is a high-pass (ramp) filter compensating for the sparser sampling at higher frequencies."},
+  {"topic":"CT","q":"In the FBP algorithm, the correct order is:","options":["Backproject, then filter","Sum projections, then take 2D FT","Only sum raw projections","Filter each projection (×|ρ|), inverse FT, backproject, then sum"],"answer":3,"explain":"FBP: 1D FT of each projection → multiply by |ρ| → inverse 1D FT → backproject → sum over all angles."},
+  {"topic":"CT","q":"Hamming windowing is applied to the ramp filter mainly to:","options":["Increase radiation dose","Remove the patient","Limit the band and reduce noise amplification","Convert to emission imaging"],"answer":2,"explain":"A window (e.g., Hamming) band-limits the ramp filter to suppress high-frequency noise amplification."},
+  {"topic":"CT","q":"Going from 2G to 3G CT, the fan beam angle was increased so that it:","options":["Covers the entire patient, removing translation","Becomes a pencil beam","Requires a stationary source","Uses gamma rays"],"answer":0,"explain":"3G widened the fan beam to cover the whole patient, removing the need for translational motion."},
+  {"topic":"CT","q":"Multislice (7G) CT primarily improves:","options":["Use of radioactive tracers","Soft tissue contrast over MRI","Number of slices acquired per rotation","Doppler measurement"],"answer":2,"explain":"Multislice CT uses multiple detector rows to acquire several slices per rotation."},
+  {"topic":"CT","q":"A 3×3 image has 9 unknowns. With only 6 projection equations, the system is:","options":["Uniquely solvable","Overdetermined","Always zero","Has no unique solution; needs 3 more equations"],"answer":3,"explain":"9 unknowns with 6 equations has no unique solution; three more illuminations (equations) are needed."},
+  {"topic":"CT","q":"In CT, the quantity actually measured along each ray relates to the line integral of:","options":["Proton density","Acoustic impedance","The attenuation coefficient","Coherence length"],"answer":2,"explain":"CT measures X-ray attenuation; the log of intensity ratio gives the line integral of μ (Radon transform)."},
+  {"topic":"CT","q":"The output 'image of the Radon transform' across all angles is called a:","options":["Sinogram","Spectrogram","Histogram","Hologram"],"answer":0,"explain":"Stacking all angular projections forms the sinogram, the image of the Radon transform."},
+  {"topic":"Nükleer","q":"Nuclear medicine imaging is fundamentally a form of:","options":["Transmission imaging","Interferometry","Emission (functional) imaging","Acoustic imaging"],"answer":2,"explain":"Gamma rays are emitted from within the body (emission imaging), showing function/metabolism rather than anatomy."},
+  {"topic":"Nükleer","q":"1 Curie (Ci) equals:","options":["1 disintegration per second","511 keV","3.7×10¹⁰ disintegrations per second","6 hours"],"answer":2,"explain":"1 Ci = 3.7×10¹⁰ dps. The SI unit, becquerel, is 1 dps."},
+  {"topic":"Nükleer","q":"The SI unit of radioactivity is the:","options":["Curie","Tesla","Rayl","Becquerel"],"answer":3,"explain":"The becquerel (Bq) is the SI unit: 1 Bq = 1 disintegration per second."},
+  {"topic":"Nükleer","q":"Half-life is the time for radioactivity to:","options":["Double","Reach 511 keV","Become monoenergetic","Decrease by one half"],"answer":3,"explain":"Half-life (T½ = ln2/λ) is the time for activity to fall to one half."},
+  {"topic":"Nükleer","q":"Which two decay products are used in medical imaging?","options":["Alpha and beta particles","Neutrons and protons","Gamma rays and positrons","Electrons and neutrinos"],"answer":2,"explain":"Imaging uses gamma rays (scintigraphy/SPECT) and positrons (PET); alpha/beta are not used for imaging."},
+  {"topic":"Nükleer","q":"Positron annihilation produces:","options":["Two 511 keV photons in opposite directions","One 140 keV photon","An alpha particle","A single neutrino"],"answer":0,"explain":"A positron annihilates with an electron, producing two 511 keV gamma photons traveling ~180° apart."},
+  {"topic":"Nükleer","q":"The two annihilation photons each have an energy of:","options":["140 keV","202 keV","159 keV","511 keV"],"answer":3,"explain":"Each photon carries 511 keV, the rest-mass energy equivalent of an electron/positron."},
+  {"topic":"Nükleer","q":"In gamma (isomeric) decay, the parent and daughter atoms are:","options":["Different elements","Always positron emitters","Alpha emitters","The same isotope with different energy levels (isomers)"],"answer":3,"explain":"Isomeric transition: same atomic and mass number but different energy levels, e.g. Tc-99m → Tc-99."},
+  {"topic":"Nükleer","q":"The desired photon energy range for radiotracers is roughly:","options":["1–10 keV","1–2 MeV","70–511 keV","10–50 eV"],"answer":2,"explain":"70–511 keV: high enough to escape the body with little attenuation, but not so high it cannot be detected."},
+  {"topic":"Nükleer","q":"Technetium-99m has a half-life and photon energy of:","options":["73 h, 135 keV","6 h, 140 keV","110 min, 202 keV","2.1 min, 696 keV"],"answer":1,"explain":"Tc-99m: 6-hour half-life, 140 keV gamma — the most common radiotracer."},
+  {"topic":"Nükleer","q":"Which is a positron emitter?","options":["Fluorine-18","Technetium-99m","Thallium-201","Iodine-123"],"answer":0,"explain":"F-18 (110 min, 202 keV) and O-15 are positron emitters; Tc-99m, Tl-201, I-123 are gamma emitters."},
+  {"topic":"Nükleer","q":"The scintillation crystal most commonly used in an Anger camera is:","options":["NaI(Tl)","PZT","Barium titanate","Silicon"],"answer":0,"explain":"Sodium iodide with thallium doping, NaI(Tl), is the standard scintillation crystal."},
+  {"topic":"Nükleer","q":"A photomultiplier tube (PMT) in the Anger camera primarily:","options":["Converts light to an electrical signal and amplifies it","Emits gamma rays","Filters X-rays","Generates the magnetic field"],"answer":0,"explain":"The PMT converts scintillation light into an electrical signal and amplifies it via dynodes."},
+  {"topic":"Nükleer","q":"The collimator in an Anger camera functions to:","options":["Amplify the signal","Pass only photons traveling in the proper direction (absorb scattered)","Convert light to electricity","Rotate the camera"],"answer":1,"explain":"The lead collimator (parallel holes) admits only properly directed photons and absorbs scattered ones."},
+  {"topic":"Nükleer","q":"The lower threshold of the pulse height analyzer (PHA) discriminates against:","options":["High-energy summed events","Lower-energy Compton-scattered events","True coincidences","Positrons"],"answer":1,"explain":"The lower threshold rejects Compton-scattered (lower-energy) events; the upper threshold rejects summed (higher-energy) events."},
+  {"topic":"Nükleer","q":"How does SPECT differ from planar scintigraphy?","options":["It uses positrons","It needs no radiotracer","It uses a rotating camera to acquire projections from many angles","It uses sound waves"],"answer":2,"explain":"SPECT rotates the Anger camera to capture multi-angle projections (like CT) for tomographic reconstruction."},
+  {"topic":"Nükleer","q":"In PET, coincidence detection requires:","options":["A lead collimator","Detecting two opposite photons within a short time window (~12 ns)","A single photon only","A rotating magnet"],"answer":1,"explain":"PET detects two opposite 511 keV photons 'simultaneously' within a 2–20 ns window; no collimation is needed, raising sensitivity."},
+  {"topic":"Nükleer","q":"A key difference between the PET and SPECT imaging equations is that in PET the attenuation term is:","options":["Always zero","Not separable from activity","Frequency dependent","Separable from the activity term"],"answer":3,"explain":"In PET the attenuation term is separable from activity, so a prior CT gives μ(x,y); in SPECT it is not separable."},
+  {"topic":"Nükleer","q":"The three classes of detected PET events are:","options":["True, scattered, and random coincidences","Alpha, beta, gamma","T1, T2, PD","A, B, M"],"answer":0,"explain":"PET events are true, scattered, and random coincidences; sensitivity is the ability to detect true and reject random."},
+  {"topic":"Nükleer","q":"In a combined PET/CT system, the CT primarily provides:","options":["High-resolution anatomical information (and attenuation map)","Functional metabolism data","Doppler flow","Radioactive tracer"],"answer":0,"explain":"CT gives high-resolution anatomy and the attenuation map; PET gives low-resolution function. Combining eases registration."},
+  {"topic":"MRI","q":"The biggest advantage of MRI over CT is:","options":["Faster scan time","Superior soft tissue contrast with no ionizing radiation","Lower cost","Simpler instrumentation"],"answer":1,"explain":"MRI provides high soft-tissue contrast (which CT cannot) and uses no ionizing radiation, but is slower and more complex."},
+  {"topic":"MRI","q":"Which nucleus is used in whole-body MRI and why?","options":["¹³C, low abundance","³¹P, bone imaging","¹H, high abundance and strong signal","¹⁹F, in teeth"],"answer":2,"explain":"¹H (protons) are abundant in body water/fat and give a strong NMR signal (large γ = 42.58 MHz/T)."},
+  {"topic":"MRI","q":"The Larmor frequency is given by:","options":["ω₀ = γ/B₀","ω₀ = γ·B₀","ω₀ = B₀/γ","ω₀ = γ + B₀"],"answer":1,"explain":"ω₀ = γB₀: precession frequency is proportional to the main field strength."},
+  {"topic":"MRI","q":"For ¹H, the gyromagnetic ratio γ is approximately:","options":["1.5 MHz/T","128 MHz/T","42.58 MHz/T","511 MHz/T"],"answer":2,"explain":"γ for ¹H is 42.58 MHz/T."},
+  {"topic":"MRI","q":"Before RF excitation, the net transverse (x-y) magnetization is zero because spins:","options":["Are perfectly aligned in xy","Do not precess","Precess out of phase, cancelling in the transverse plane","Point along B₁"],"answer":2,"explain":"Spins precess incoherently (out of phase), so transverse components cancel; only the +z (M₀) component remains."},
+  {"topic":"MRI","q":"The flip (tip) angle α depends on:","options":["Only B₀ strength","The amplitude and duration of the RF pulse","Proton density only","The collimator"],"answer":1,"explain":"The tip angle is set by the RF pulse amplitude and how long it is applied."},
+  {"topic":"MRI","q":"T1 relaxation is also called:","options":["Spin-spin / transverse relaxation","Spin-lattice / longitudinal relaxation","T2* decay","Free induction decay"],"answer":1,"explain":"T1 (spin-lattice, longitudinal) is the recovery of Mz toward equilibrium: Mz(t)=M₀(1−e^(−t/T1))."},
+  {"topic":"MRI","q":"T2 relaxation describes the decay of:","options":["Longitudinal magnetization Mz","The main field B₀","Transverse magnetization Mxy","The gradient field"],"answer":2,"explain":"T2 (spin-spin, transverse) is loss of phase coherence: Mxy(t)=M₀e^(−t/T2)."},
+  {"topic":"MRI","q":"For a given tissue, which is always true?","options":["T1 > T2","T2 > T1","T1 = T2","T1 = 0"],"answer":0,"explain":"For the same tissue, T1 is always greater than T2."},
+  {"topic":"MRI","q":"T2* decay is faster than T2 because of:","options":["Higher proton density","Longer TR","Magnetic field inhomogeneity","Stronger gradients"],"answer":2,"explain":"T2* includes dephasing from field inhomogeneity, making the signal decay faster than pure T2."},
+  {"topic":"MRI","q":"The Free Induction Decay (FID) is:","options":["The static B₀ field","The decaying NMR signal induced in the coil","The gradient waveform","The collimated beam"],"answer":1,"explain":"The FID is the decaying voltage signal produced by decaying Mxy, governed by T2(*)."},
+  {"topic":"MRI","q":"A spin echo is formed by applying, after the 90° pulse, a:","options":["Second 90° pulse","Gradient only","180° (π) refocusing pulse","RF at twice the Larmor frequency"],"answer":2,"explain":"A 180° pulse refocuses dephased spins to form an echo; the excitation-to-echo time is TE."},
+  {"topic":"MRI","q":"A T1-weighted image uses:","options":["Long TR, long TE","Long TR, short TE","Short TR, short TE","Short TR, long TE"],"answer":2,"explain":"T1-weighting: short TR + short TE emphasizes T1 differences."},
+  {"topic":"MRI","q":"A T2-weighted image uses:","options":["Short TR, short TE","Short TR, long TE","Long TR, short TE","Long TR, long TE"],"answer":3,"explain":"T2-weighting: long TR (reduces T1 effect) + long TE (emphasizes T2 differences)."},
+  {"topic":"MRI","q":"A proton-density (PD)-weighted image uses:","options":["Short TR, short TE","Long TR, long TE","Short TR, long TE","Long TR, short TE"],"answer":3,"explain":"PD-weighting: long TR + short TE minimizes both T1 and T2 effects."},
+  {"topic":"MRI","q":"Water/CSF (long T1, long T2) appears:","options":["Bright on T1, dark on T2","Dark on T1, bright on T2","Bright on both","Dark on both"],"answer":1,"explain":"Long T1 → dark on T1-weighted; long T2 → bright on T2-weighted."},
+  {"topic":"MRI","q":"Gadolinium contrast agents:","options":["Increase T1 and T2 times","Have no effect on signal","Only work in CT","Reduce T1 and T2, enhancing signal on T1-weighted images"],"answer":3,"explain":"Gadolinium shortens T1 and T2, producing enhanced (bright) signal on T1-weighted images."},
+  {"topic":"MRI","q":"The function of gradient coils is to:","options":["Change the direction of B₀","Add/subtract a spatially-varying magnitude to B₀ for spatial encoding","Generate the RF pulse","Cool the magnet"],"answer":1,"explain":"Gradient coils make field magnitude position-dependent (not direction), enabling slice selection and frequency/phase encoding."},
+  {"topic":"MRI","q":"The most common field strength for whole-body clinical MRI is:","options":["1.5 T","0.5 T","9 T","21 T"],"answer":0,"explain":"1.5 T is the most common; the range is 0.5–3 T with some 9 T systems."},
+  {"topic":"MRI","q":"Using a stronger z-gradient with the same RF bandwidth selects a:","options":["Thicker slice","Whole-body slab","Thinner slice","No slice"],"answer":2,"explain":"A larger gradient maps the same frequency range to a thinner spatial slice."},
+  {"topic":"MRI","q":"The MRI system is enclosed in a copper-lined room acting as a:","options":["Collimator","Scintillator","Transducer","Faraday cage"],"answer":3,"explain":"A Faraday cage shields the system from external electronic/RF noise such as broadcast signals."},
+  {"topic":"Ultrason","q":"Ultrasound imaging primarily measures the tissue's:","options":["Proton density","Radioactivity","Coherence length","Reflectivity to sound waves"],"answer":3,"explain":"Ultrasound measures the reflectivity of tissue to sound; Doppler additionally measures velocity."},
+  {"topic":"Ultrason","q":"Unlike electromagnetic waves, acoustic waves:","options":["Travel through vacuum","Require a material medium to propagate","Are made of photons","Cannot be reflected"],"answer":1,"explain":"Acoustic (pressure) waves need a material medium; EM waves do not."},
+  {"topic":"Ultrason","q":"The approximate speed of sound in soft tissue is:","options":["340 m/s","3×10⁸ m/s","20 m/s","1540 m/s"],"answer":3,"explain":"Soft tissue sound speed is ~1540 m/s, used in depth calculations."},
+  {"topic":"Ultrason","q":"Acoustic (characteristic) impedance Z is defined as:","options":["Z = ρ/c","Z = c/ρ","Z = ρ·c","Z = 1/(ρc)"],"answer":2,"explain":"Z = ρc (density × sound speed), measured in rayls; impedance mismatch governs reflection."},
+  {"topic":"Ultrason","q":"When Z₁ ≈ Z₂ at a boundary, the reflection is:","options":["Total","Always 100%","Negative","Very small"],"answer":3,"explain":"If the impedances are nearly equal, R is small; if very different, nearly total reflection occurs."},
+  {"topic":"Ultrason","q":"Why can't air-filled organs like the lungs be imaged well with ultrasound?","options":["They emit gamma rays","Sound travels too slowly","Huge impedance mismatch causes near-total reflection","They have no protons"],"answer":2,"explain":"The large impedance difference between air and tissue reflects almost the entire wave (total reflection)."},
+  {"topic":"Ultrason","q":"The attenuation of ultrasound intensity with depth follows:","options":["J(x)=J₀·x²","J(x)=J₀·e^(−μx)","J(x)=J₀/x","J(x)=J₀·μx"],"answer":1,"explain":"Intensity decays exponentially: J(x)=J₀e^(−μx), with μ = absorption + scattering."},
+  {"topic":"Ultrason","q":"Absorption (μₐ) component of attenuation mainly causes:","options":["Image sharpening","Tissue heating","Increased frequency","Reflection"],"answer":1,"explain":"Absorption converts acoustic energy into heat, warming the tissue."},
+  {"topic":"Ultrason","q":"A transducer generates and detects ultrasound via the:","options":["Piezoelectric effect","Doppler effect","Photoelectric effect","Compton effect"],"answer":0,"explain":"The piezoelectric effect converts electrical↔mechanical energy; materials include PZT and BaTiO₃."},
+  {"topic":"Ultrason","q":"Why is gel applied between the transducer and skin?","options":["To cool the skin","To minimize air, since sound barely penetrates air","To increase radiation","To dope the crystal"],"answer":1,"explain":"Sound barely penetrates air, so gel removes the air gap to allow good coupling."},
+  {"topic":"Ultrason","q":"Axial resolution requires a minimum separation of about:","options":["Δz ∼ 3λ","Δz ≥ 10λ","Δz = c·t","Δz ≥ λ/2"],"answer":3,"explain":"Axial resolution rule of thumb: Δz ≥ λ/2 (structures behind one another)."},
+  {"topic":"Ultrason","q":"Lateral resolution is approximately:","options":["Δx ≥ λ/2","Δx = 0","Δx = c/2","Δx ∼ 3λ"],"answer":3,"explain":"Lateral resolution Δx ∼ 3λ and is always inferior to axial resolution."},
+  {"topic":"Ultrason","q":"Increasing ultrasound frequency results in:","options":["Lower resolution but deeper penetration","Higher resolution but lower penetration depth","No change","Higher penetration and resolution"],"answer":1,"explain":"High frequency → high resolution but high attenuation → shallow penetration (a trade-off)."},
+  {"topic":"Ultrason","q":"In A-mode, depth is computed as:","options":["d = c·t","d = 2c·t","d = c/t","d = c·t/2"],"answer":3,"explain":"d = c·t/2; divided by 2 because the sound travels to the interface and back."},
+  {"topic":"Ultrason","q":"In an A-scan display, the y-axis (amplitude) reflects:","options":["Depth","The strength of the echo / size of impedance mismatch","Time","Frequency"],"answer":1,"explain":"Amplitude (spike height) indicates echo strength, i.e., the magnitude of impedance mismatch at an interface."},
+  {"topic":"Ultrason","q":"B-mode images are formed by:","options":["A single A-mode line","Rotating a magnet","Coincidence detection","Combining many A-mode scans into a 2-D brightness image"],"answer":3,"explain":"B-mode (brightness) combines many A-mode lines into a 2-D (or 3-D) image; pixel brightness = echo amplitude."},
+  {"topic":"Ultrason","q":"M-mode ultrasound is most useful for:","options":["Analyzing organ motion over time (e.g., echocardiography)","Measuring radioactivity","Bone density","Brain perfusion"],"answer":0,"explain":"M-mode (motion) tracks structure movement over time, e.g., cardiac wall motion (echocardiography)."},
+  {"topic":"Ultrason","q":"The Doppler frequency shift is given by:","options":["f_D = 2f₀v·cosθ/c","f_D = f₀/v","f_D = c/(2v)","f_D = f₀·c·v"],"answer":0,"explain":"f_D = 2f₀v·cosθ/c; the factor 2 accounts for transmit-and-receive."},
+  {"topic":"Ultrason","q":"In Doppler imaging, when the beam is perpendicular to flow (θ=90°):","options":["The shift is maximal","The signal is negative","cosθ=0, so no shift is detected","Resolution is highest"],"answer":2,"explain":"At θ=90°, cosθ=0 and no Doppler shift is detected; clinically θ<60° is preferred."},
+  {"topic":"Ultrason","q":"If a reflector (e.g., blood) moves toward the transducer, f_D is:","options":["Negative (lower frequency)","Zero","Imaginary","Positive (higher frequency)"],"answer":3,"explain":"Motion toward the transducer raises the received frequency → positive f_D; motion away → negative."},
+  {"topic":"OCT","q":"OCT's working principle is most similar to:","options":["Ultrasound, but using light instead of sound","CT, but with magnets","PET, but with positrons","MRI, but with gradients"],"answer":0,"explain":"OCT works like ultrasound but uses light waves instead of sound, via low-coherence interferometry."},
+  {"topic":"OCT","q":"The standard clinical application of OCT is:","options":["Cardiac CT","Ophthalmology (retinal imaging)","Bone scanning","Lung imaging"],"answer":1,"explain":"OCT is the standard of care in ophthalmology; emerging uses include cardiovascular, GI, and dermatology."},
+  {"topic":"OCT","q":"Two waves are 'coherent' when they have:","options":["Different wavelengths and random phase","Opposite amplitudes","Different speeds","Matching wavelengths and the same phase shift"],"answer":3,"explain":"Coherent waves share the same wavelength and a fixed (matching) phase relationship."},
+  {"topic":"OCT","q":"Monochromatic light has a bandwidth of:","options":["Zero (single wavelength)","Infinite","511 nm","Equal to its coherence length"],"answer":0,"explain":"Monochromatic light is a single wavelength, so its bandwidth is 0; low-coherence sources emit a spectrum."},
+  {"topic":"OCT","q":"The coherence length lc is given by lc = (2ln2/π)(λ₀²/Δλ). A higher bandwidth Δλ leads to:","options":["A shorter coherence length and higher resolution","A longer coherence length","No interference","Lower resolution"],"answer":0,"explain":"Higher bandwidth → shorter coherence length → higher axial resolution."},
+  {"topic":"OCT","q":"In a Michelson interferometer, equal path lengths in the two arms produce:","options":["Destructive interference","Constructive interference","No light","Total reflection"],"answer":1,"explain":"Equal arm path lengths give constructive interference (maximum detected intensity)."},
+  {"topic":"OCT","q":"The detector in a Michelson interferometer measures intensity as:","options":["I = E","I = 1/E","I = E/2","I = E²"],"answer":3,"explain":"Intensity is the square of the electromagnetic field, I = E²."},
+  {"topic":"OCT","q":"Interference can only be observed if the path-length difference is:","options":["Greater than the coherence length","Exactly zero always","Less than or equal to the coherence length","Infinite"],"answer":2,"explain":"If the path difference exceeds the coherence length, no interference is observed."},
+  {"topic":"OCT","q":"In Time-Domain OCT, a depth profile at one position (A-scan) is obtained by:","options":["A single static measurement","Sweeping the laser wavelength","Moving the reference mirror through positions","Rotating the sample"],"answer":2,"explain":"TD-OCT moves the reference mirror to match different sample depths, building an A-scan; the moving mirror is slow."},
+  {"topic":"OCT","q":"A B-scan in OCT is created by:","options":["A single A-scan","Stacking volumes","Acquiring A-scans along a line to form a 2-D image","Measuring one wavelength"],"answer":2,"explain":"Scanning the beam along a line while acquiring A-scans yields a 2-D B-scan; stacking B-scans gives a volume."},
+  {"topic":"OCT","q":"The key advantage of Fourier-Domain OCT over Time-Domain OCT is:","options":["No moving parts → much faster (single spectral measurement + FFT)","It needs a moving mirror","Lower resolution","It uses sound"],"answer":0,"explain":"FD-OCT measures the whole spectrum at once and applies inverse FFT — no moving mirror, so it is much faster."},
+  {"topic":"OCT","q":"In Fourier-Domain OCT, the A-scan is recovered from the spectrum via:","options":["An inverse Fourier transform: I(z)=FFT⁻¹[S(λ)]","A ramp filter","Coincidence detection","A collimator"],"answer":0,"explain":"The spectrum encodes depth; I(z)=FFT⁻¹[S(λ)] decodes it into the depth profile (A-scan)."},
+  {"topic":"OCT","q":"Spectral-Domain OCT (SD-OCT) uses a:","options":["Swept laser and single detector","Broad-spectrum source and a spectrometer measuring all wavelengths at once","Moving mirror","Gamma camera"],"answer":1,"explain":"SD-OCT uses a broad-spectrum source with a spectrometer (~3 μm resolution, up to ~1,000,000 A-scans/s)."},
+  {"topic":"OCT","q":"Swept-Source OCT (SS-OCT) is characterized by:","options":["A spectrometer measuring all wavelengths simultaneously","A light source that sweeps wavelengths over time with a single detector","A moving reference mirror","Use of radioactive tracers"],"answer":1,"explain":"SS-OCT sweeps the wavelength rapidly with a single detector (~5 μm, up to ~6,000,000 A-scans/s)."},
+  {"topic":"OCT","q":"OCT angiography visualizes blood vessels by:","options":["Injecting gadolinium","Coincidence detection of photons","Measuring T1 relaxation","Detecting high speckle variance from moving blood across repeated scans"],"answer":3,"explain":"Repeated scans of the same area create a variance map; moving blood gives high speckle response → vessels without contrast agent."},
+  {"topic":"OCT","q":"Compared with intravascular ultrasound, OCT offers:","options":["Higher resolution","Lower resolution","No need for a catheter","Use of sound waves"],"answer":0,"explain":"In cardiovascular catheter imaging, OCT offers higher resolution than intravascular ultrasound."},
+  {"topic":"OCT","q":"OCT operates with light in which regime?","options":["X-ray","Gamma ray","Infrared, micrometer wavelengths","Radio frequency"],"answer":2,"explain":"OCT devices use infrared light with micrometer-scale wavelengths, matching cell sizes (enabling speckle-based angiography)."},
+  {"topic":"OCT","q":"In Time-Domain OCT, the main disadvantage compared with Fourier-Domain OCT is:","options":["It uses ionizing radiation","The moving reference mirror limits acquisition speed","It cannot image the retina","It requires a contrast agent"],"answer":1,"explain":"TD-OCT relies on a mechanically moving reference mirror, which limits the maximum sampling speed; FD-OCT has no moving parts."},
+  {"topic":"OCT","q":"Which OCT-related advantage is correctly stated?","options":["It is non-invasive, radiation-free, real-time, high-resolution and portable","It uses ionizing radiation like CT","It only works on bone","It is slower than X-ray"],"answer":0,"explain":"OCT is non-invasive, uses no ionizing radiation, is real-time, high-resolution (3–5 μm) and portable — summarized advantages of the modality."}
+];
+
+/* ---------- 5) FORMÜLLER & SINAV ÖZETİ ---------- */
+const FORMULAS = [
+  // CT
+  { topic: "CT", name: "Radon dönüşümü", f: String.raw`g(l,\theta)=\int f\!\left(x(s),\,y(s)\right)\,ds`, note: "Bir açıdaki çizgi integrali (projeksiyon)." },
+  { topic: "CT", name: "Filtrelenmiş geri projeksiyon (FBP)", f: String.raw`f(x,y)=\int_{0}^{\pi}\!\left[\,\int G(\rho,\theta)\,|\rho|\,e^{\,j2\pi\rho l}\,d\rho\right]d\theta`, note: "|ρ| = ramp filtresi; filtrele → ters FT → geri projekte → topla." },
+  { topic: "CT", name: "Ramp filtresi", f: String.raw`c(\rho)=|\rho|`, note: "Yüksek geçiren; seyrek yüksek-frekans örneklemesini telafi eder." },
+  // Nuclear
+  { topic: "Nükleer", name: "Radyoaktif bozunma yasası", f: String.raw`N(t)=N_0\,e^{-\lambda t}`, note: "λ = bozunma sabiti." },
+  { topic: "Nükleer", name: "Yarı ömür", f: String.raw`T_{1/2}=\dfrac{\ln 2}{\lambda}\approx\dfrac{0.693}{\lambda}`, note: "Aktivitenin yarıya inme süresi." },
+  { topic: "Nükleer", name: "Curie ↔ Bq", f: String.raw`1\ \mathrm{Ci}=3.7\times10^{10}\ \mathrm{Bq}`, note: "Bq = 1 bozunma/saniye (dps)." },
+  { topic: "Nükleer", name: "Radyasyon şiddeti", f: String.raw`I=\dfrac{A\,E}{4\pi r^{2}}`, note: "Ters kare yasası; A: aktivite, E: foton enerjisi." },
+  { topic: "Nükleer", name: "Annihilation fotonları", f: String.raw`2\times 511\ \mathrm{keV}`, note: "Zıt yönde (~180°) iki foton — PET'in temeli." },
+  // MRI
+  { topic: "MRI", name: "Larmor frekansı", f: String.raw`\omega_0=\gamma\,B_0`, note: "¹H için γ = 42.58 MHz/T." },
+  { topic: "MRI", name: "T1 toparlanması (longitudinal)", f: String.raw`M_z(t)=M_0\left(1-e^{-t/T_1}\right)`, note: "Spin-lattice relaksasyon." },
+  { topic: "MRI", name: "T2 sönmesi (transverse)", f: String.raw`M_{xy}(t)=M_0\,e^{-t/T_2}`, note: "Spin-spin relaksasyon; her zaman T1 > T2." },
+  { topic: "MRI", name: "Kontrast kuralı", html: true, f: `<span class="mtxt">T1 → kısa TR, kısa TE<br>T2 → uzun TR, uzun TE<br>PD → uzun TR, kısa TE</span>`, note: "TE her zaman TR'den kısa." },
+  // Ultrasound
+  { topic: "Ultrason", name: "Ses hızı", f: String.raw`c=\dfrac{1}{\sqrt{\kappa\rho}}`, note: "κ: sıkıştırılabilirlik, ρ: yoğunluk. (≈1540 m/s yumuşak doku)" },
+  { topic: "Ultrason", name: "Akustik empedans", f: String.raw`Z=\rho\,c`, note: "Birim: rayl. Yansımayı belirler." },
+  { topic: "Ultrason", name: "Yansıma katsayısı", f: String.raw`R=\left(\dfrac{Z_2-Z_1}{Z_2+Z_1}\right)^{2}`, note: "Z farkı büyük → tam yansıma." },
+  { topic: "Ultrason", name: "İletim katsayısı", f: String.raw`T=\dfrac{4Z_1 Z_2}{(Z_1+Z_2)^{2}}`, note: "R + T enerjisi korunur." },
+  { topic: "Ultrason", name: "Atenüasyon", f: String.raw`J(x)=J_0\,e^{-\mu x}`, note: "μ = μₐ (absorpsiyon) + μₛ (saçılma)." },
+  { topic: "Ultrason", name: "Derinlik (A-mode)", f: String.raw`d=\dfrac{c\,t}{2}`, note: "Gidip geldiği için 2'ye bölünür." },
+  { topic: "Ultrason", name: "Çözünürlük", f: String.raw`\text{eksenel: }\;\Delta z\ge\dfrac{\lambda}{2}\qquad\text{yanal: }\;\Delta x\sim 3\lambda`, note: "Yanal her zaman daha kötü." },
+  { topic: "Ultrason", name: "Doppler kayması", f: String.raw`f_D=\dfrac{2 f_0\,v\,\cos\theta}{c}`, note: "θ=0° max, θ=90° sıfır; klinik θ<60°." },
+  { topic: "Ultrason", name: "Snell (refraksiyon)", f: String.raw`\dfrac{\sin\theta_1}{\sin\theta_2}=\dfrac{v_1}{v_2}`, note: "Yumuşak dokuda etkisi ihmal edilir." },
+  // OCT
+  { topic: "OCT", name: "Koherens uzunluğu", f: String.raw`l_c=\dfrac{2\ln 2}{\pi}\cdot\dfrac{\lambda_0^{2}}{\Delta\lambda}`, note: "Yüksek Δλ → küçük lc → yüksek çözünürlük." },
+  { topic: "OCT", name: "Dedektör şiddeti", f: String.raw`I=E^{2}`, note: "Michelson interferometresi." },
+  { topic: "OCT", name: "Fourier-Domain çözümleme", f: String.raw`I(z)=\mathrm{FFT}^{-1}\!\left[\,S(\lambda)\,\right]`, note: "Spektrum derinlik bilgisini kodlar." }
+];
+
+/* Sınav öncesi 'mutlaka bil' notları */
+const CRAM = [
+  { topic: "CT", text: "CT = iletim (transmission), anatomik. Nesiller hız sırası: 1G→7G. 3G fan beam translation'ı kaldırdı. 5G=EBCT (kalp). 6G=helical. FBP'de |ρ| ramp filtresi bulanıklığı giderir." },
+  { topic: "Nükleer", text: "Emisyon + fonksiyonel. 1 Ci=3.7×10¹⁰ Bq. T½=ln2/λ. Görüntüleme: gamma (SPECT) + pozitron (PET). PET=2×511 keV zıt foton, koincidans, kolimatörsüz. Tc-99m: 6 sa, 140 keV. PET'te atenüasyon ayrılabilir (CT ile μ bulunur), SPECT'te ayrılamaz." },
+  { topic: "MRI", text: "Radyasyonsuz, en iyi yumuşak doku kontrastı. ¹H, γ=42.58 MHz/T. ω₀=γB₀. T1=longitudinal (Mz toparlanır), T2=transverse (Mxy söner), her zaman T1>T2. T1-w: kısa TR/TE; T2-w: uzun TR/TE; PD: uzun TR, kısa TE. Su T1'de koyu, T2'de parlak. 1.5 T en yaygın." },
+  { topic: "Ultrason", text: "Radyasyonsuz, gerçek zamanlı, ucuz, düşük çözünürlük. c≈1540 m/s, Z=ρc. R=((Z₂−Z₁)/(Z₂+Z₁))². Hava=tam yansıma (akciğer görüntülenemez). Piezoelektrik (PZT). Yüksek f=yüksek çözünürlük+az penetrasyon. d=ct/2. Doppler: f_D=2f₀v cosθ/c, θ<60°." },
+  { topic: "OCT", text: "İnterferometri + ışık (ultrason benzeri). Oftalmolojide standart. lc=(2ln2/π)(λ₀²/Δλ): yüksek bandwidth→yüksek çözünürlük. TD-OCT=hareketli ayna (yavaş). FD-OCT=aynasız, spektrum+IFFT (hızlı): SD-OCT (~3μm, spektrometre) ve SS-OCT (~5μm, taranan lazer). Anjiyografi=kontrastsız damar (speckle varyansı)." }
+];
+
+/* ---------- 6) MODALİTE KARŞILAŞTIRMA TABLOSU ---------- */
+const COMPARISON = {
+  columns: ["Özellik", "CT", "Nükleer (PET/SPECT)", "MRI", "Ultrason", "OCT"],
+  rows: [
+    ["Kullanılan dalga/ajan", "X-ışını", "Gamma / pozitron (radyotracer)", "Manyetik alan + RF", "Ses dalgası", "Işık (IR)"],
+    ["Görüntüleme türü", "İletim (transmission)", "Emisyon (emission)", "Manyetik rezonans", "Yansıma (akustik)", "İnterferometri"],
+    ["Gösterdiği bilgi", "Anatomi", "Fonksiyon/metabolizma", "Anatomi + yumuşak doku", "Anatomi + akış (Doppler)", "Mikro-yapı (katmanlar)"],
+    ["İyonlaştırıcı radyasyon", "Var", "Var", "Yok", "Yok", "Yok"],
+    ["Çözünürlük", "Yüksek", "Düşük", "Yüksek", "Orta/düşük", "Çok yüksek (µm)"],
+    ["Gerçek zamanlı", "Hayır", "Hayır", "Hayır", "Evet", "Evet (FD-OCT)"],
+    ["Tipik kullanım", "Travma, akciğer, kemik", "Tümör, perfüzyon", "Beyin, yumuşak doku", "Fetüs, kalp, damar", "Retina, damar duvarı"],
+    ["Temel formül", "FBP / Radon", "T½=ln2/λ; 511 keV", "ω₀=γB₀", "Z=ρc; d=ct/2", "lc=(2ln2/π)(λ₀²/Δλ)"]
+  ]
+};
+
+</script>
+<script>
+/* ============================================================
+   app.js  -  Render + etkileşim (açılış ekranlı)
+   ============================================================ */
+"use strict";
+
+const $  = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+
+/* ---------- GÖRÜNÜM (view) GEÇİŞİ ---------- */
+function showView(id) {
+  $$(".view").forEach(v => v.classList.toggle("active", v.id === id));
+  $("#homebtn").classList.toggle("hidden", id === "home");
+  window.scrollTo({ top: 0, behavior: "auto" });
+}
+function setupNav() {
+  $$("[data-go]").forEach(el => el.addEventListener("click", () => showView(el.dataset.go)));
+}
+
+/* ---------- 1) KONULAR ---------- */
+function renderTopics() {
+  const wrap = $("#topics-list");
+  const chips = $("#topic-chips");
+
+  TOPICS.forEach((t, i) => {
+    const chip = document.createElement("button");
+    chip.className = "topic-chip";
+    chip.style.background = `linear-gradient(135deg, ${t.color}, var(--pink-5))`;
+    chip.innerHTML = `${t.icon} ${esc(t.title)}`;
+    chip.addEventListener("click", () => {
+      const card = $("#topic-" + t.id);
+      card.classList.add("open");
+      card.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    chips.appendChild(chip);
+
+    const card = document.createElement("article");
+    card.className = "topic-card" + (i === 0 ? " open" : "");
+    card.id = "topic-" + t.id;
+
+    const subs = t.sections.map(s => `
+      <div class="sub">
+        <h4>${esc(s.heading)}</h4>
+        <div class="body">${s.body}</div>
+        ${s.svg ? s.svg : ""}
+        ${s.example ? `<div class="example"><b class="lbl">💡 Örnek:</b> ${s.example}</div>` : ""}
+      </div>`).join("");
+
+    card.innerHTML = `
+      <div class="topic-head" style="background:linear-gradient(135deg, ${t.color}, var(--pink-5))">
+        <span class="t-ico">${t.icon}</span>
+        <span>${esc(t.title)}</span>
+        <span class="chev">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="topic-intro">${t.intro}</div>
+        ${subs}
+      </div>`;
+
+    card.querySelector(".topic-head").addEventListener("click", () => card.classList.toggle("open"));
+    wrap.appendChild(card);
+  });
+}
+
+/* ---------- 2) BİLGİ KARTLARI ---------- */
+let cardFilter = "all";
+function renderFlashControls() {
+  const topics = ["all", ...new Set(FLASHCARDS.map(c => c.topic))];
+  const row = $("#flash-filter");
+  topics.forEach(tp => {
+    const b = document.createElement("button");
+    b.className = "btn fbtn" + (tp === "all" ? " active" : "");
+    b.textContent = tp === "all" ? "Tümü 🌸" : tp;
+    b.addEventListener("click", () => {
+      cardFilter = tp;
+      $$("#flash-filter .fbtn").forEach(x => x.classList.toggle("active", x === b));
+      renderFlashcards();
+    });
+    row.appendChild(b);
+  });
+}
+function renderFlashcards() {
+  const grid = $("#flash-grid");
+  const q = $("#flash-search").value.trim().toLowerCase();
+  const list = FLASHCARDS.filter(c =>
+    (cardFilter === "all" || c.topic === cardFilter) &&
+    (!q || (c.q + " " + c.a).toLowerCase().includes(q))
+  );
+  grid.innerHTML = list.length ? "" : `<p class="empty">Aramana uygun kart bulunamadı 🌸</p>`;
+  list.forEach(c => {
+    const flip = document.createElement("div");
+    flip.className = "flip";
+    flip.innerHTML = `
+      <div class="flip-inner">
+        <div class="flip-face flip-front">
+          <span class="badge">${esc(c.topic)}</span>
+          <div class="q">${c.q}</div>
+          <div class="hint">👆 Cevabı görmek için tıkla</div>
+        </div>
+        <div class="flip-face flip-back">
+          <span class="badge">Cevap</span>
+          <div class="a">${c.a}</div>
+        </div>
+      </div>`;
+    flip.addEventListener("click", () => flip.classList.toggle("flipped"));
+    grid.appendChild(flip);
+  });
+}
+
+/* ---------- 3) TERİMLER ---------- */
+function renderTerms() {
+  const grid = $("#term-grid");
+  const q = $("#term-search").value.trim().toLowerCase();
+  const list = TERMS.filter(t => !q || (t.en + " " + t.tr + " " + t.topic).toLowerCase().includes(q));
+  grid.innerHTML = list.length ? "" : `<p class="empty">Terim bulunamadı 🌸</p>`;
+  list.forEach(t => {
+    const d = document.createElement("div");
+    d.className = "term";
+    d.innerHTML = `<span class="tt">${esc(t.topic)}</span>
+      <div class="en">${t.en}</div>
+      <div class="tr">${t.tr}</div>`;
+    grid.appendChild(d);
+  });
+  $("#term-count").textContent = list.length;
+}
+
+/* ---------- 4) TEST ---------- */
+let quizFilter = "all";
+let answered = {};
+function renderQuizControls() {
+  const topics = ["all", ...new Set(QUESTIONS.map(q => q.topic))];
+  const row = $("#quiz-filter");
+  topics.forEach(tp => {
+    const b = document.createElement("button");
+    b.className = "btn fbtn" + (tp === "all" ? " active" : "");
+    b.textContent = tp === "all" ? `Tümü (${QUESTIONS.length})` : tp;
+    b.addEventListener("click", () => {
+      quizFilter = tp;
+      $$("#quiz-filter .fbtn").forEach(x => x.classList.toggle("active", x === b));
+      renderQuiz();
+    });
+    row.appendChild(b);
+  });
+  $("#quiz-reset").addEventListener("click", () => {
+    answered = {};
+    renderQuiz();
+  });
+}
+function renderQuiz() {
+  const wrap = $("#quiz-list");
+  wrap.innerHTML = "";
+  QUESTIONS.forEach((q, i) => {
+    if (quizFilter !== "all" && q.topic !== quizFilter) return;
+    const card = document.createElement("div");
+    card.className = "qcard";
+    const opts = q.options.map((o, oi) => {
+      const key = String.fromCharCode(65 + oi);
+      return `<button class="opt" data-q="${i}" data-o="${oi}"><span class="key">${key}</span><span>${esc(o)}</span></button>`;
+    }).join("");
+    card.innerHTML = `
+      <div class="qhead">
+        <span class="qnum">${i + 1}</span>
+        <span class="qtext">${esc(q.q)}<span class="qtopic">${esc(q.topic)}</span></span>
+      </div>
+      <div class="opts">${opts}</div>
+      <div class="explain" id="exp-${i}"><b class="lbl">✔️ Açıklama:</b> ${esc(q.explain)}</div>`;
+    wrap.appendChild(card);
+    if (i in answered) applyAnswerState(card, i, answered[i]);
+  });
+  wrap.querySelectorAll(".opt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const qi = +btn.dataset.q;
+      if (qi in answered) return;
+      answered[qi] = +btn.dataset.o;
+      applyAnswerState(btn.closest(".qcard"), qi, answered[qi]);
+      updateScore();
+    });
+  });
+  updateScore();
+}
+function applyAnswerState(card, qi, chosen) {
+  const correct = QUESTIONS[qi].answer;
+  card.querySelectorAll(".opt").forEach(o => {
+    const oi = +o.dataset.o;
+    o.classList.add("disabled");
+    if (oi === correct) o.classList.add("correct");
+    else if (oi === chosen) o.classList.add("wrong");
+  });
+  $("#exp-" + qi).classList.add("show");
+}
+function updateScore() {
+  const keys = Object.keys(answered);
+  let correct = 0;
+  keys.forEach(k => { if (answered[k] === QUESTIONS[k].answer) correct++; });
+  const total = QUESTIONS.length;
+  $("#score-correct").textContent = correct;
+  $("#score-done").textContent = keys.length;
+  $("#score-total").textContent = total;
+  const pct = keys.length ? Math.round((correct / keys.length) * 100) : 0;
+  $("#score-pct").textContent = pct + "%";
+  $("#scorebar-fill").style.width = (keys.length / total * 100) + "%";
+}
+
+/* ---------- 5) FORMÜLLER & ÖZET ---------- */
+function renderFormulas() {
+  const cramWrap = $("#cram-list");
+  CRAM.forEach(c => {
+    const d = document.createElement("div");
+    d.className = "cram-card";
+    d.innerHTML = `<h4>${esc(c.topic)}</h4><div>${esc(c.text)}</div>`;
+    cramWrap.appendChild(d);
+  });
+  const fg = $("#formula-grid");
+  FORMULAS.forEach(f => {
+    const d = document.createElement("div");
+    d.className = "formula";
+    d.innerHTML = `<span class="ftt">${esc(f.topic)}</span>
+      <div class="fname">${esc(f.name)}</div>
+      <div class="fexp"></div>
+      <div class="fnote">${esc(f.note)}</div>`;
+    const fexp = d.querySelector(".fexp");
+    if (f.html) {
+      fexp.innerHTML = f.f;
+    } else if (window.katex) {
+      try { katex.render(f.f, fexp, { displayMode: true, throwOnError: false }); }
+      catch (e) { fexp.textContent = f.f; }
+    } else {
+      fexp.textContent = f.f;
+    }
+    fg.appendChild(d);
+  });
+}
+
+/* ---------- KARŞILAŞTIRMA TABLOSU ---------- */
+function renderComparison() {
+  const wrap = $("#compare-wrap");
+  const head = COMPARISON.columns.map(c => `<th>${esc(c)}</th>`).join("");
+  const body = COMPARISON.rows.map(r =>
+    "<tr>" + r.map(cell => `<td>${esc(cell)}</td>`).join("") + "</tr>"
+  ).join("");
+  wrap.innerHTML = `<table class="compare"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+/* ---------- METİN İÇİ FORMÜLLER (KaTeX) ---------- */
+const MATHMAP = {
+  ct_radon:    String.raw`g(l,\theta)=\int f\!\left(x(s),y(s)\right)\,ds`,
+  nm_decay:    String.raw`N(t)=N_0\,e^{-\lambda t}`,
+  nm_intensity:String.raw`I=\dfrac{A\,E}{4\pi r^{2}}`,
+  nm_halflife: String.raw`T_{1/2}=\dfrac{\ln 2}{\lambda}\approx\dfrac{0.693}{\lambda}`,
+  mri_larmor:  String.raw`\omega_0=\gamma B_0`,
+  mri_t1:      String.raw`M_z(t)=M_0\left(1-e^{-t/T_1}\right)`,
+  mri_t2:      String.raw`M_{xy}(t)=M_0\,e^{-t/T_2}`,
+  us_speed:    String.raw`c=\dfrac{1}{\sqrt{\kappa\rho}}`,
+  us_imp:      String.raw`Z=\rho c`,
+  us_refl:     String.raw`R=\left(\dfrac{Z_2-Z_1}{Z_2+Z_1}\right)^{2}`,
+  us_trans:    String.raw`T=\dfrac{4Z_1 Z_2}{(Z_1+Z_2)^{2}}`,
+  us_atten:    String.raw`J(x)=J_0\,e^{-\mu x}`,
+  us_axial:    String.raw`\Delta z\ge\dfrac{\lambda}{2}`,
+  us_lateral:  String.raw`\Delta x\sim 3\lambda`,
+  us_depth:    String.raw`d=\dfrac{c\,t}{2}`,
+  us_doppler:  String.raw`f_D=\dfrac{2 f_0\,v\,\cos\theta}{c}`,
+  oct_det:     String.raw`I=E^{2}`,
+  oct_coh:     String.raw`l_c=\dfrac{2\ln 2}{\pi}\cdot\dfrac{\lambda_0^{2}}{\Delta\lambda}`,
+  oct_fd:      String.raw`I(z)=\mathrm{FFT}^{-1}\!\left[S(\lambda)\right]`
+};
+function renderMath() {
+  if (!window.katex) return;
+  document.querySelectorAll(".m[data-tex]").forEach(el => {
+    const tex = MATHMAP[el.getAttribute("data-tex")];
+    if (!tex) return;
+    try { katex.render(tex, el, { throwOnError: false }); }
+    catch (e) { el.textContent = tex; }
+  });
+}
+
+/* ---------- BAŞLAT ---------- */
+/* ---------- KOYU MOD ---------- */
+function setTheme(dark) {
+  document.body.classList.toggle("dark", dark);
+  const b = $("#themebtn");
+  if (b) { b.textContent = dark ? "☀️" : "🌙"; b.title = dark ? "Açık mod" : "Koyu mod"; }
+  try { localStorage.setItem("mi-theme", dark ? "dark" : "light"); } catch (e) {}
+}
+function setupTheme() {
+  let saved = "light";
+  try { saved = localStorage.getItem("mi-theme") || "light"; } catch (e) {}
+  setTheme(saved === "dark");
+  $("#themebtn").addEventListener("click", () => setTheme(!document.body.classList.contains("dark")));
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  setupNav();
+  setupTheme();
+  renderTopics();
+  renderFlashControls();
+  renderFlashcards();
+  renderTerms();
+  renderQuizControls();
+  renderQuiz();
+  renderFormulas();
+  renderComparison();
+  renderMath();
+  $("#flash-search").addEventListener("input", renderFlashcards);
+  $("#term-search").addEventListener("input", renderTerms);
+  showView("home");
+});
+
+</script>
+</body>
+</html>
